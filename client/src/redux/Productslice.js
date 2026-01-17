@@ -3,33 +3,33 @@ import axios from "axios";
 
 // 🔄 Fetch all products
 export const fetchProducts = createAsyncThunk("products/fetch", async () => {
-  const res = await axios.get("http://localhost:5000/api/product");
+  const res = await axios.get("https://ecommerce-7l2l.onrender.com/api/product");
   return res.data.products;
 
 });
 
 // ➕ Add product
 export const addProduct = createAsyncThunk("products/add", async (productData) => {
-  const res = await axios.post("http://localhost:5000/api/product/add", productData);
+  const res = await axios.post("https://ecommerce-7l2l.onrender.com/api/product/add", productData);
   return res.data;
 });
 
 // ❌ Delete product
 export const deleteProduct = createAsyncThunk("products/delete", async (id) => {
-  await axios.delete(`http://localhost:5000/api/product/delete/${id}`);
+  await axios.delete(`https://ecommerce-7l2l.onrender.com/api/product/delete/${id}`);
   return id;
 });
 
 // ✏️ Update product
 export const updateProduct = createAsyncThunk("products/update", async ({ id, data }) => {
-  const res = await axios.put(`http://localhost:5000/api/product/update/${id}`, data);
+  const res = await axios.put(`https://ecommerce-7l2l.onrender.com/api/product/update/${id}`, data);
   return res.data;
 });
 
 export const fetchProductById = createAsyncThunk(
   "products/fetchById",
   async (id) => {
-    const res = await axios.get(`http://localhost:5000/api/product/${id}`);
+    const res = await axios.get(`https://ecommerce-7l2l.onrender.com/api/product/${id}`);
     return res.data.product;  // Assuming res.data is the product object
   }
 );
@@ -39,7 +39,7 @@ export const fetchRecommendedProducts = createAsyncThunk(
   async ({ categoryId, excludeId }, thunkAPI) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/products/filter?category=${categoryId}&exclude=${excludeId}`
+        `https://ecommerce-7l2l.onrender.com/api/products/filter?category=${categoryId}&exclude=${excludeId}`
       );
       const data = await response.json();
       return data.products;  // assuming API returns { products: [...] }

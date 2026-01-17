@@ -45,7 +45,7 @@ const Signup = () => {
     console.log('Signup:', formData);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/signup', formData);
+      const response = await axios.post('https://ecommerce-7l2l.onrender.com/api/signup', formData);
       console.log('Server Response:', response.data);
       toast.success('Signup successful! Redirecting to login...');
       setTimeout(() => {

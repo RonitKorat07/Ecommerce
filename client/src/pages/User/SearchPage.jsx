@@ -10,7 +10,7 @@ const SearchPage = () => {
     useEffect(() => {
       const fetchproduct  = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/search?q=${encodeURIComponent(query)}`)
+                const res = await fetch(`https://ecommerce-7l2l.onrender.com/api/search?q=${encodeURIComponent(query)}`)
                 const data = await res.json();
                 setProducts(data.products)
             } catch (error) {
