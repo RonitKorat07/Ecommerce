@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
 import Userproductcardverti from '../../components/Userproductcardverti';
+import axiosClient from '../../api/axiosClient';
+import API from '../../api/endpoints';
 
 const SearchPage = () => {
     const [products, setProducts] = useState([]);
@@ -10,9 +12,8 @@ const SearchPage = () => {
     useEffect(() => {
       const fetchproduct  = async () => {
             try {
-                const res = await fetch(`https://ecommerce-7l2l.onrender.com/api/search?q=${encodeURIComponent(query)}`)
-                const data = await res.json();
-                setProducts(data.products)
+                const res = await axiosClient.get(API.search(query))
+                setProducts(res.data.products)
             } catch (error) {
                 console.error("Error fetching products:", error);
                 setProducts([]);

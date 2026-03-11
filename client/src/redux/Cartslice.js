@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosClient from "../api/axiosClient";
+import API from "../api/endpoints";
 
 // Add to Cart Thunk
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ userId, productId, selectedSize, selectedColor, quantity }, thunkAPI) => {
     try {
-      const res = await axios.post("https://ecommerce-7l2l.onrender.com/api/cart/add", {
+      const res = await axiosClient.post(API.cart.add, {
         userId,
         productId,
         selectedSize,
@@ -27,7 +28,7 @@ export const fetchCart = createAsyncThunk(
   "cart/fetchCart",
   async (userId, thunkAPI) => {
     try {
-      const res = await axios.get(`https://ecommerce-7l2l.onrender.com/api/cart/${userId}`);
+      const res = await axiosClient.get(API.cart.get(userId));
       console.log("data" ,res.data.cart.items);
       return res.data.cart.items;
        // array of cart items
@@ -42,7 +43,7 @@ export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async ({ userId, itemId }, thunkAPI) => {
     try {
-      await axios.delete(`https://ecommerce-7l2l.onrender.com/api/cart/remove/${userId}/${itemId}`);
+      await axiosClient.delete(API.cart.remove(userId, itemId));
       return itemId;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data?.message || "Failed to remove from cart");
@@ -55,7 +56,7 @@ export const updateCartQuantity = createAsyncThunk(
   "cart/updateCartQuantity",
   async ({ userId, productId, quantity , selectedSize, selectedColor}, thunkAPI) => {
     try {
-      const res = await axios.put(`https://ecommerce-7l2l.onrender.com/api/cart/update/${userId}`, {
+      const res = await axiosClient.put(API.cart.update(userId), {
         productId,
         quantity,
         selectedSize,
@@ -72,7 +73,7 @@ export const fetchCheckoutSummary = createAsyncThunk(
   "cart/fetchCheckoutSummary",
   async ({ userId, cartItems }, thunkAPI) => {
     try {
-      const res = await axios.post("https://ecommerce-7l2l.onrender.com/api/cart/checkoutsummary", {
+      const res = await axiosClient.post(API.cart.checkoutSummary, {
         userId,
         cartItems,
       });

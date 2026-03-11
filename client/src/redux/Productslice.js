@@ -1,35 +1,36 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosClient from "../api/axiosClient";
+import API from "../api/endpoints";
 
 // 🔄 Fetch all products
 export const fetchProducts = createAsyncThunk("products/fetch", async () => {
-  const res = await axios.get("https://ecommerce-7l2l.onrender.com/api/product");
+  const res = await axiosClient.get(API.product.all);
   return res.data.products;
 
 });
 
 // ➕ Add product
 export const addProduct = createAsyncThunk("products/add", async (productData) => {
-  const res = await axios.post("https://ecommerce-7l2l.onrender.com/api/product/add", productData);
+  const res = await axiosClient.post(API.product.add, productData);
   return res.data;
 });
 
 // ❌ Delete product
 export const deleteProduct = createAsyncThunk("products/delete", async (id) => {
-  await axios.delete(`https://ecommerce-7l2l.onrender.com/api/product/delete/${id}`);
+  await axiosClient.delete(API.product.delete(id));
   return id;
 });
 
 // ✏️ Update product
 export const updateProduct = createAsyncThunk("products/update", async ({ id, data }) => {
-  const res = await axios.put(`https://ecommerce-7l2l.onrender.com/api/product/update/${id}`, data);
+  const res = await axiosClient.put(API.product.update(id), data);
   return res.data;
 });
 
 export const fetchProductById = createAsyncThunk(
   "products/fetchById",
   async (id) => {
-    const res = await axios.get(`https://ecommerce-7l2l.onrender.com/api/product/${id}`);
+    const res = await axiosClient.get(API.product.getById(id));
     return res.data.product;  // Assuming res.data is the product object
   }
 );
@@ -38,11 +39,8 @@ export const fetchRecommendedProducts = createAsyncThunk(
   "products/fetchRecommendedProducts",
   async ({ categoryId, excludeId }, thunkAPI) => {
     try {
-      const response = await fetch(
-        `https://ecommerce-7l2l.onrender.com/api/products/filter?category=${categoryId}&exclude=${excludeId}`
-      );
-      const data = await response.json();
-      return data.products;  // assuming API returns { products: [...] }
+      const response = await axiosClient.get(API.product.filter(categoryId, excludeId));
+      return response.data.products;  // assuming API returns { products: [...] }
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message || "Failed to fetch recommended products");
     }

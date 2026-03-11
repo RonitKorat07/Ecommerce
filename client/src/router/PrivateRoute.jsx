@@ -3,13 +3,11 @@ import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 
 const PrivateRoute = ({ allowedRoles }) => {
-  // Redux se token aur role fetch karo
-  const { token, user } = useSelector((state) => state.user);
-  // console.log('Redux user:', user);
-  // console.log('Redux Token:', token);
+  // Redux se auth state fetch karo
+  const { isAuthenticated, user } = useSelector((state) => state.user);
 
-  if (!token) {
-    // Agar token hi nahi hai, to login pe bhej do
+  if (!isAuthenticated) {
+    // Agar authenticated nahi hai, to login pe bhej do
     return <Navigate to="/signin" replace />;
   }
 

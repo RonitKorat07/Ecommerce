@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axiosClient from '../api/axiosClient';
+import API from '../api/endpoints';
 
 export const placeOrder = createAsyncThunk(
   'order/placeOrder',
   async ({ cartitem, formData, summaryData, userId }, thunkAPI) => {
     try {
-      const response = await axios.post('https://ecommerce-7l2l.onrender.com/api/order/placeorder', {
+      const response = await axiosClient.post(API.order.place, {
         userId,
         items: cartitem.map(item => ({
           productId:item.productId._id,  // support both populated or plain id
@@ -44,7 +45,7 @@ export const fetchAdminOrders = createAsyncThunk(
   'order/fetchAdminOrders',
   async (page = 1, thunkAPI) => {  // accept page param, default 1
     try {
-      const response = await axios.get(`https://ecommerce-7l2l.onrender.com/api/order/admin/all?page=${page}`);
+      const response = await axiosClient.get(API.order.adminAll(page));
       // API returns { orders, totalOrders, currentPage, totalPages, ... }
       return response.data;
     } catch (error) {
@@ -58,7 +59,7 @@ export const fetchUserOrders = createAsyncThunk(
   'order/fetchUserOrders',
   async (userId, thunkAPI) => {
     try {
-      const response = await axios.get(`https://ecommerce-7l2l.onrender.com/api/order/user/${userId}`);
+      const response = await axiosClient.get(API.order.userOrders(userId));
       return response.data.orders; // assuming API returns { orders: [...] }
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);

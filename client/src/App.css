@@ -1,9 +1,82 @@
-/* Hide scrollbar but allow scrolling */
-.hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .hide-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none;    /* Firefox */
-  }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap');
+
+:root {
+
+  /* ================================
+     1. BRAND COLORS
+  ================================= */
+
+  --primary: #2563EB;          /* Main Blue */
+  --primary-dark: #1D4ED8;     /* Hover / Active */
+  --primary-light: #60A5FA;    /* Soft Blue backgrounds */
+
+  --accent: #FF7A00;           /* Orange CTA */
+  --accent-dark: #E66A00;      /* Orange Hover */
+  --accent-light: #FFB266;     /* Light orange highlight */
+
+
+  /* ================================
+     2. BACKGROUND COLORS
+  ================================= */
+
+  --bg-body: #F5F7FB;          /* Whole website background */
+  --bg-section: #EEF2FF;       /* Light section background */
+  --bg-card: #FFFFFF;          /* Cards */
+  --bg-navbar: #FFFFFF;        /* Navbar */
+
+
+  /* ================================
+     3. TEXT COLORS
+  ================================= */
+
+  --text-main: #0F172A;        /* Main headings */
+  --text-muted: #64748B;       /* Secondary text */
+  --text-white: #FFFFFF;
+
+
+  /* ================================
+     4. UI ELEMENTS
+  ================================= */
+
+  --border-light: #E2E8F0;
+  --border-focus: #2563EB;
+
+  --shadow-card: 0 8px 20px rgba(0,0,0,0.08);
+  --shadow-hover: 0 12px 28px rgba(0,0,0,0.12);
+
+
+  /* ================================
+     5. STATUS COLORS
+  ================================= */
+
+  --success: #22C55E;
+  --danger: #EF4444;
+  --warning: #F59E0B;
+
+
+  /* ================================
+     6. ECOMMERCE COLORS
+  ================================= */
+
+  --price-color: #2563EB;
+  --star-rating: #FFB800;
+  --discount-tag: #EF4444;
+
+
+  /* ================================
+     7. GRADIENTS
+  ================================= */
+
+  --gradient-primary: linear-gradient(135deg,#2563EB,#60A5FA);
+  --gradient-accent: linear-gradient(135deg,#FF7A00,#FFB266);
+  --gradient-hero: linear-gradient(135deg,#2563EB,#FF7A00);
+
+
+  /* ================================
+     8. FONTS
+  ================================= */
+
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+}

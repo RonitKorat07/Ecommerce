@@ -1,13 +1,14 @@
 // redux/slices/categorySlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosClient from "../api/axiosClient";
+import API from "../api/endpoints";
 
 // GET Categories
 export const fetchCategories = createAsyncThunk(
   "category/fetchCategories",
   async (_, thunkAPI) => {
     try {
-      const res = await axios.get("https://ecommerce-7l2l.onrender.com/api/category");
+      const res = await axiosClient.get(API.category.all);
       return res.data;
     } catch (err) {
       return thunkAPI.rejectWithValue("Failed to fetch categories.");
@@ -20,7 +21,7 @@ export const addCategory = createAsyncThunk(
   "category/addCategory",
   async ({ name, image }, thunkAPI) => {
     try {
-      await axios.post("https://ecommerce-7l2l.onrender.com/api/category/add", { name ,image });
+      await axiosClient.post(API.category.add, { name ,image });
       thunkAPI.dispatch(fetchCategories());
     } catch (err) {
       return thunkAPI.rejectWithValue("Failed to add category.");
@@ -33,7 +34,7 @@ export const deleteCategory = createAsyncThunk(
   "category/deleteCategory",
   async (id, thunkAPI) => {
     try {
-      await axios.delete(`https://ecommerce-7l2l.onrender.com/api/category/delete/${id}`);
+      await axiosClient.delete(API.category.delete(id));
       thunkAPI.dispatch(fetchCategories());
     } catch (err) {
       return thunkAPI.rejectWithValue("Failed to delete category.");
@@ -46,7 +47,7 @@ export const updateCategory = createAsyncThunk(
   "category/updateCategory",
   async ({ id, name ,image}, thunkAPI) => {
     try {
-      await axios.put(`https://ecommerce-7l2l.onrender.com/api/category/update/${id}`, { name ,image });
+      await axiosClient.put(API.category.update(id), { name ,image });
       thunkAPI.dispatch(fetchCategories());
     } catch (err) {
       return thunkAPI.rejectWithValue("Failed to update category.");

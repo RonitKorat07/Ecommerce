@@ -15,18 +15,26 @@ import Myorder from "../pages/User/Myorder.jsx";
 import Allorderpage from "../pages/Admin/Allorderpage.jsx";
 import SearchPage from "../pages/User/SearchPage.jsx";
 
+import AuthRoute from "./AuthRoute.jsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      // AUTH routes (Public but hidden when logged in)
       {
-        path: "signin",
-        element: <Signin />,
-      },
-      {
-        path: "signup",
-        element: <Signup />,
+        element: <AuthRoute />,
+        children: [
+          {
+            path: "signin",
+            element: <Signin />,
+          },
+          {
+            path: "signup",
+            element: <Signup />,
+          },
+        ],
       },
      
 
