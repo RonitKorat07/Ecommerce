@@ -1,7 +1,7 @@
 import React from 'react';
 import { ShoppingBag } from 'lucide-react';
 
-const Logo = ({ className = "w-6 h-6", textClassName = "text-lg" }) => {
+const Logo = ({ className = "w-6 h-6", textClassName = "text-lg", hideText = false }) => {
   return (
     <div className={`flex items-center gap-1.5 font-bold cursor-pointer select-none`}>
       <div 
@@ -10,15 +10,17 @@ const Logo = ({ className = "w-6 h-6", textClassName = "text-lg" }) => {
       >
         <ShoppingBag className={className} />
       </div>
-      <span 
-        className={`tracking-tight ${textClassName}`}
-        style={{ 
-          fontFamily: 'var(--font-heading)',
-          color: 'var(--text-main)'
-        }}
-      >
-        Shop<span style={{ color: 'var(--accent)' }}>Ease</span>
-      </span>
+      {!hideText && (
+        <span 
+          className={`tracking-tight ${textClassName}`}
+          style={{ 
+            fontFamily: 'var(--font-heading)',
+            color: 'var(--text-main)'
+          }}
+        >
+          Shop<span style={{ color: 'var(--accent)' }}>Ease</span>
+        </span>
+      )}
     </div>
   );
 };

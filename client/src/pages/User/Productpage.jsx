@@ -1,8 +1,8 @@
-import Productdetails from '../../components/Productdetails'
+import Productdetails from '../../components/User/Productdetails'
 
 const Productpage = () => {
   return (
-    <Productdetails/>
+    <Productdetails />
   )
 }
 

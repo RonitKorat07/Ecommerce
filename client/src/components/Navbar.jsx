@@ -1,44 +1,50 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/Userslice";
-import { FaUser, FaShoppingCart, FaSearch } from "react-icons/fa";
+import { ShoppingBag, Search, User, LogOut, Menu, Settings, Bell, ChevronDown } from "lucide-react";
 import { clearCart, fetchCart } from "../redux/Cartslice";
+import { Dropdown, DropdownItem } from "./UI/Dropdown";
 
-function Navbar() {
+function Navbar({ isSidebarOpen, onToggleSidebar }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [searchquery, setsearchquery] = useState('')
+  const location = useLocation();
+  const [searchquery, setsearchquery] = useState("");
 
   const cartCount = useSelector((state) => state.cart.items.length);
 
   const handleLogout = () => {
     dispatch(logout());
-    dispatch(clearCart());  // <== यहाँ cart clear किया
+    dispatch(clearCart());
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/signin");
   };
 
-  const toggleDropdown = () => {
-    console.log("Dropdown toggled");
-    setDropdownOpen(!dropdownOpen);
+  useEffect(() => {
+    if (user?._id && user?.role !== 'admin') {
+      dispatch(fetchCart(user._id));
+    }
+  }, [dispatch, user]);
+
+  const getPageLabel = (path) => {
+    const segments = path.split('/').filter(Boolean);
+    const titleMap = {
+      'admin/dashboard': 'Overview',
+      'admin/category': 'Categories',
+      'admin/product': 'Inventory',
+      'admin/order': 'Fulfill Orders',
+      'user/dashboard': 'Store',
+      'user/myorder': 'My Orders',
+      'user/addtocart': 'Cart',
+    };
+    const fullPath = segments.join('/');
+    return titleMap[fullPath] || segments[segments.length - 1]?.charAt(0).toUpperCase() + segments[segments.length - 1]?.slice(1) || 'Dashboard';
   };
 
-useEffect(() => {
-  if (user?._id && user?.role !== 'admin') {
-    console.log(user._id);
-    dispatch(fetchCart(user._id));
-  }
-}, [dispatch, user]);
-
-useEffect(() => {
-  // Jab bhi user change ho, dropdown close kar do
-  setDropdownOpen(false);
-}, [user]);
-
+  const currentPage = getPageLabel(location.pathname);
 
   const handelsearchsubmit = (e) => {
     e.preventDefault();
@@ -46,134 +52,99 @@ useEffect(() => {
       navigate(`/search?q=${encodeURIComponent(searchquery.trim())}`);
     }
   };
-  return (
-    <nav className="flex items-center justify-between sticky top-0 z-50 p-4 bg-blue-600 text-white">
-      {/* Logo */}
-      <Link to="/" className="text-lg sm:text-2xl font-bold hover:text-gray-200">
-        ShopLogo
-      </Link>
 
-      {/* Search Bar */}
+  return (
+    <nav
+      className={`fixed top-0 right-0 z-[50] h-[var(--topbar-height)] transition-all duration-300 glass-effect flex items-center ${
+        isSidebarOpen ? "left-[var(--sidebar-width)]" : "left-0 lg:left-[var(--sidebar-collapsed-width)]"
+      }`}
+    >
+      <div className="w-full h-full px-6 md:px-8 flex items-center justify-between">
+
+        {/* ── Left: Hamburger + Page Title ── */}
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={onToggleSidebar}
+            className="p-2 -ml-2 rounded-lg hover:bg-slate-100 text-slate-500 lg:hidden transition-colors"
+          >
+            <Menu size={22} />
+          </button>
+          
+          <div className="flex items-center gap-2.5">
+            <span className="w-1.5 h-5 rounded-full" style={{ background: 'var(--gradient-primary)' }} />
+            <h1 
+              className="text-xl font-bold tracking-tight"
+              style={{ 
+                color: 'var(--text-main)',
+                fontFamily: 'var(--font-heading)' 
+              }}
+            >
+              {currentPage}
+            </h1>
+          </div>
+        </div>
+
+        {/* ── Center: Search Bar (User only) ── */}
         {user?.role !== "admin" && (
-          <div className="hidden sm:flex justify-center w-full">
-            <form onSubmit={handelsearchsubmit} className="relative w-full sm:max-w-xs md:max-w-sm lg:max-w-md">
+          <div className="hidden md:flex flex-1 max-w-md mx-8">
+            <form onSubmit={handelsearchsubmit} className="relative w-full group">
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchquery}
                 onChange={(e) => setsearchquery(e.target.value)}
-                className="w-full px-4 py-2 pl-10 rounded-full text-black bg-white focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-100 px-10 py-2 rounded-xl text-sm transition-all outline-none"
               />
-              <FaSearch className="absolute top-3 left-3 text-gray-400" />
+              <Search className="absolute top-1/2 -translate-y-1/2 left-3.5 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={16} />
             </form>
           </div>
         )}
 
+        {/* ── Right: Notifications + Profile ── */}
+        <div className="flex items-center gap-2">
+          {/* Notification Bell */}
+          <button className="relative p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors">
+            <Bell size={20} />
+            <span 
+              className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full border-2 border-white"
+              style={{ backgroundColor: 'var(--accent)' }}
+            />
+          </button>
 
-      {/* User/Admin Buttons */}
-      <div className="flex items-center space-x-3">
-        {user ? (
-          <>
-            {user.role === "admin" ? (
-              <div className="relative">
-                <button
-                  onClick={toggleDropdown}
-                  className="flex items-center bg-white text-blue-600 text-sm px-2 py-1 md:px-4 md:py-1 md:text-lg  rounded-full hover:bg-gray-100"
+          {/* Divider */}
+          <div className="h-6 w-px bg-slate-200 mx-1 hidden sm:block" />
+
+          {/* Profile Dropdown */}
+          <Dropdown
+            trigger={
+              <div className="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-full border border-slate-200 cursor-pointer hover:border-[var(--primary)] hover:shadow-sm transition-all group">
+                <div 
+                  className="w-8 h-8 rounded-full text-white flex items-center justify-center font-semibold text-sm shadow-sm"
+                  style={{ background: 'var(--gradient-primary)' }}
                 >
-                  <FaUser className="mr-2" />
-                  {user.name}
-                </button>
-
-                {dropdownOpen && (
-                  <div className="absolute right-0 mt-6 w-50 bg-white text-blue-600 rounded-md shadow-md">
-                    <Link
-                      to="admin/category"
-                      className="block px-4 py-2 hover:bg-gray-100 border-b border-gray-200"
-                      onClick={() => setDropdownOpen(false)}
-                    >
-                      Category Manage
-                    </Link>
-                    <Link
-                      to="admin/product"
-                      className="block px-4 py-2 hover:bg-gray-100 border-b border-gray-200"
-                      onClick={() => setDropdownOpen(false)}
-                    >
-                      Product Manage
-                    </Link>
-                    <Link
-                      to="admin/order"
-                      className="block px-4 py-2 hover:bg-gray-100 border-b border-gray-200"
-                      onClick={() => setDropdownOpen(false)}
-                    >
-                      All Orders
-                    </Link>
-                    <button
-                     onClick={() => { 
-                        handleLogout(); 
-                        setDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <>
-                <Link to="/user/addtocart">
-                  <button className="relative flex items-center bg-white text-blue-600 text-sm px-2 py-1 md:px-4 md:py-1 md:text-lg rounded-full hover:bg-gray-100">
-                    <FaShoppingCart className="mr-2" />
-                    Cart
-
-                    {cartCount > 0 && (
-                      <span className="absolute  -top-2 -right-1 bg-red-500 text-white text-xs font-semibold w-4 h-4 md:w-6 md:h-6 flex items-center justify-center rounded-full">
-                        {cartCount}
-                      </span>
-                    )}
-                  </button>
-                </Link>
-
-                <div className="relative">
-                  <button
-                    onClick={toggleDropdown}
-                    className="flex items-center bg-white text-blue-600 px-1 py-1 text-sm md:text-lg md:px-4 md:py-1 rounded-full hover:bg-gray-100"
-                  >
-                    <FaUser className="mr-2" />
-                    {user.name}
-                  </button>
-
-                  {dropdownOpen && (
-                    <div className="absolute right-0 mt-6 w-50 bg-white text-blue-600 rounded-md shadow-md">
-                      <Link
-                        to="/user/myorder"
-                        className="block px-4 py-2 hover:bg-gray-100 border-b border-gray-200"
-                        onClick={() => setDropdownOpen(false)}
-                      >
-                        My Orders
-                      </Link>
-                      <button
-                       onClick={() => { 
-                        handleLogout(); 
-                        setDropdownOpen(false);
-                      }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-100"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  )}
+                  {user?.name?.[0]?.toUpperCase()}
                 </div>
-              </>
-            )}
-          </>
-        ) : (
-          <Link to="/signin">
-            <button className="bg-white text-blue-600 px-4 py-2 rounded-full hover:bg-gray-100">
-              Login
-            </button>
-          </Link>
-        )}
+                <div className="hidden sm:flex items-center gap-1.5">
+                  <span className="text-[13px] font-semibold text-[var(--text-main)]">
+                    {user?.name}
+                  </span>
+                  <ChevronDown size={13} className="text-slate-400 group-hover:text-[var(--primary)] transition-colors" />
+                </div>
+              </div>
+            }
+          >
+            <DropdownItem onClick={() => navigate("/profile")} className="gap-3">
+              <User size={16} className="text-slate-400" /> Profile
+            </DropdownItem>
+            <DropdownItem onClick={() => navigate("/settings")} className="gap-3">
+              <Settings size={16} className="text-slate-400" /> Settings
+            </DropdownItem>
+            <div className="h-px bg-slate-100 my-1" />
+            <DropdownItem onClick={handleLogout} className="text-rose-600 hover:bg-rose-50 gap-3">
+              <LogOut size={16} /> Logout
+            </DropdownItem>
+          </Dropdown>
+        </div>
       </div>
     </nav>
   );

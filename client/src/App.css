@@ -3,34 +3,34 @@
 :root {
 
   /* ================================
-     1. BRAND COLORS
+     1. BRAND COLORS (Professional Palette)
   ================================= */
 
-  --primary: #2563EB;          /* Main Blue */
-  --primary-dark: #1D4ED8;     /* Hover / Active */
-  --primary-light: #60A5FA;    /* Soft Blue backgrounds */
+  --primary: #0F4C81;          /* Classic Deep Blue */
+  --primary-dark: #0A355A;     /* Deeper Shadow Blue */
+  --primary-light: #E0EFFF;    /* Ultra Light Blue */
 
-  --accent: #FF7A00;           /* Orange CTA */
-  --accent-dark: #E66A00;      /* Orange Hover */
-  --accent-light: #FFB266;     /* Light orange highlight */
+  --accent: #F97316;           /* Professional Orange (Vibrant) */
+  --accent-dark: #EA580C;      /* Deep Orange */
+  --accent-light: #FFedd5;     /* Soft Orange Highlight */
 
 
   /* ================================
      2. BACKGROUND COLORS
   ================================= */
 
-  --bg-body: #F5F7FB;          /* Whole website background */
-  --bg-section: #EEF2FF;       /* Light section background */
-  --bg-card: #FFFFFF;          /* Cards */
-  --bg-navbar: #FFFFFF;        /* Navbar */
+  --bg-body: #F8FAFC;          /* Clean Slate Background */
+  --bg-section: #F1F5F9;       /* Section Separator */
+  --bg-card: #FFFFFF;          /* Pure White Cards */
+  --bg-navbar: rgba(255, 255, 255, 0.85); /* For Glassmorphism */
 
 
   /* ================================
      3. TEXT COLORS
   ================================= */
 
-  --text-main: #0F172A;        /* Main headings */
-  --text-muted: #64748B;       /* Secondary text */
+  --text-main: #0F172A;        /* Slate 900 */
+  --text-muted: #475569;       /* Slate 600 */
   --text-white: #FFFFFF;
 
 
@@ -39,17 +39,21 @@
   ================================= */
 
   --border-light: #E2E8F0;
-  --border-focus: #2563EB;
+  --border-focus: #3B82F6;
 
-  --shadow-card: 0 8px 20px rgba(0,0,0,0.08);
-  --shadow-hover: 0 12px 28px rgba(0,0,0,0.12);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-card: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-navbar: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+
+  --glass-blur: blur(12px);
 
 
   /* ================================
      5. STATUS COLORS
   ================================= */
 
-  --success: #22C55E;
+  --success: #10B981;
   --danger: #EF4444;
   --warning: #F59E0B;
 
@@ -58,18 +62,18 @@
      6. ECOMMERCE COLORS
   ================================= */
 
-  --price-color: #2563EB;
-  --star-rating: #FFB800;
-  --discount-tag: #EF4444;
+  --price-color: #0F4C81;
+  --star-rating: #FBBF24;
+  --discount-tag: #F43F5E;
 
 
   /* ================================
      7. GRADIENTS
   ================================= */
 
-  --gradient-primary: linear-gradient(135deg,#2563EB,#60A5FA);
-  --gradient-accent: linear-gradient(135deg,#FF7A00,#FFB266);
-  --gradient-hero: linear-gradient(135deg,#2563EB,#FF7A00);
+  --gradient-primary: linear-gradient(135deg, #0F4C81, #3B82F6);
+  --gradient-accent: linear-gradient(135deg, #F97316, #FB923C);
+  --gradient-glass: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.4));
 
 
   /* ================================
@@ -79,4 +83,54 @@
   --font-heading: 'Poppins', sans-serif;
   --font-body: 'Inter', sans-serif;
 
+  /* ================================
+     9. LAYOUT & SIDEBAR
+  ================================= */
+  --sidebar-width: 280px;
+  --sidebar-collapsed-width: 80px;
+  --topbar-height: 72px;
+  --sidebar-bg: #FFFFFF;
+  --sidebar-border: #E2E8F0;
+  --sidebar-active-bg: var(--primary-light);
+  --sidebar-active-text: var(--primary);
+
 }
+
+/* Layout Utilities */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-body);
+}
+
+.main-content {
+  flex: 1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding-top: var(--topbar-height);
+}
+
+.with-sidebar {
+  margin-left: var(--sidebar-width);
+}
+
+@media (max-width: 1024px) {
+  .with-sidebar {
+    margin-left: 0;
+  }
+}
+
+/* Glassmorphism Utility */
+.glass-effect {
+  background: var(--bg-navbar);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.shadow-premium {
+  box-shadow: var(--shadow-navbar);
+}
+
+.transition-premium {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

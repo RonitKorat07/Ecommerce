@@ -36,7 +36,7 @@ const router = createBrowserRouter([
           },
         ],
       },
-     
+
 
       // USER routes with PrivateRoute
       {
@@ -48,27 +48,27 @@ const router = createBrowserRouter([
           },
           {
             path: "user/product/:id",
-            element: <Productpage/>,
+            element: <Productpage />,
           },
           {
             path: "/user/category/:categoryId",
-            element: <Categorywiseproduct/>,
+            element: <Categorywiseproduct />,
           },
           {
             path: "/user/addtocart",
-            element: <Addtocart/>,
+            element: <Addtocart />,
           },
           {
             path: "/user/addtocart/checkout",
-            element: <Checkoutpage/>,
+            element: <Checkoutpage />,
           },
           {
             path: "/user/myorder",
-            element: <Myorder/>,
+            element: <Myorder />,
           },
           {
             path: "/search",
-            element: <SearchPage/>,
+            element: <SearchPage />,
           },
           // aur bhi user routes...
         ],
