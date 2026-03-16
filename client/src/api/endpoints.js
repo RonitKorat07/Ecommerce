@@ -1,4 +1,7 @@
 const API = {
+  dashboard: {
+    stats: '/dashboard/stats',
+  },
   auth: {
     signin: '/signin',
     signup: '/signup',

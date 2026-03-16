@@ -6,9 +6,13 @@ import { user_signup_controller } from '../controller/user_signup_controller.js'
 import { addToCart, getCart, removeFromCart, updateCartQuantity } from '../controller/addtocart_controller.js';
 import { saveCheckoutSummary } from '../controller/checkoutsummary_controller.js';
 import { getAllOrdersAdmin, getAllOrdersForUser, placeOrder } from '../controller/order_controller.js';
+import { getDashboardStats } from '../controller/dashboard_controller.js';
 import requiresignin from '../middleware/requiresignin.js';
 
 const router = express.Router();
+
+// dashboard
+router.get('/dashboard/stats', getDashboardStats, requiresignin);
 
 // categorey 
 router.post('/category/add' , addCategory , requiresignin)

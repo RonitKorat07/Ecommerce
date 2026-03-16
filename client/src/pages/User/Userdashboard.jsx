@@ -40,23 +40,26 @@ const UserDashboard = () => {
   return (
     <div className="min-h-screen bg-[var(--bg-body)] pb-20 space-y-12 animate-in fade-in duration-700">
       {/* Categories Bar */}
-      <section className="bg-white border-b border-[var(--border-light)] sticky top-[64px] z-40  shadow-sm overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
-          <div className="flex gap-8 overflow-x-auto py-4 hide-scrollbar justify-start md:justify-center items-center">
+      <section className="pt-6 pb-2 w-full">
+        <div className="max-w-[1400px] mx-auto">
+          {/* Add px-4 lg:px-8 here but keep the scroll track bleeding to edges if we want, or just pad it here */}
+          <div className="flex gap-8 md:gap-12 overflow-x-auto py-6 hide-scrollbar scroll-smooth justify-start lg:justify-center items-center px-4 lg:px-8 w-full">
             {categories.map((cat) => (
               <div
                 key={cat._id}
                 onClick={() => navigate(`/user/category/${cat._id}`)}
-                className="flex flex-col items-center min-w-[70px] cursor-pointer group"
+                className="flex flex-col items-center gap-3 min-w-[70px] cursor-pointer transition-all group flex-shrink-0"
               >
-                <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-[var(--bg-body)] p-1 border-2 border-transparent group-hover:border-[var(--primary)] transition-all transform group-hover:scale-105 group-hover:shadow-md overflow-hidden">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[var(--primary)] shadow-[0_4px_15px_rgb(0,0,0,0.05)] group-hover:shadow-[0_8px_25px_rgb(0,0,0,0.1)] bg-white transition-all duration-300 transform group-hover:-translate-y-1">
                   <img
                     src={cat.image}
                     alt={cat.name}
-                    className="w-full h-full object-cover rounded-xl"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
-                <p className="mt-2 text-[11px] font-bold text-[var(--text-muted)] group-hover:text-[var(--primary)] uppercase tracking-tighter transition-colors">{cat.name}</p>
+                <span className="text-[13px] font-bold text-slate-600 group-hover:text-[var(--primary)] transition-colors text-center tracking-wide">
+                  {cat.name}
+                </span>
               </div>
             ))}
           </div>
@@ -65,32 +68,38 @@ const UserDashboard = () => {
 
       <div className="max-w-[1400px] mx-auto px-4 lg:px-8 space-y-16">
         {/* Hero Banner */}
-        <section className="relative group overflow-hidden rounded-3xl h-[300px] md:h-[450px] shadow-2xl transition-all hover:scale-[1.005]">
+        <section className="relative group overflow-hidden rounded-[2.5rem] h-[250px] md:h-[350px] lg:h-[400px] shadow-2xl transition-all hover:shadow-[0_20px_60px_rgba(0,0,0,0.15)] hover:scale-[1.002]">
           <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+            className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
             style={{
-              backgroundImage: 'var(--gradient-hero)',
-              opacity: 0.95
+              backgroundImage: 'url("https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop")',
+              backgroundPosition: 'center 40%',
             }}
           ></div>
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
-          <div className="relative h-full flex flex-col items-center justify-center text-center p-8 text-white space-y-6">
-            <div className="animate-in slide-in-from-bottom-8 duration-700">
-              <span className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
-                <Sparkles size={14} /> New Season Collection
+          {/* Dark overlay that fades to primary color tint */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent group-hover:from-black/95 transition-colors duration-500"></div>
+          
+          <div className="relative h-full flex flex-col justify-center p-6 pl-8 md:p-10 md:pl-12 lg:p-12 lg:pl-16 text-white w-full md:w-3/4 lg:w-2/3">
+            <div className="animate-in slide-in-from-left-8 duration-700 space-y-3 md:space-y-4">
+              <span className="inline-flex items-center gap-2 bg-[var(--accent)]/10 backdrop-blur-md px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-[var(--accent)] border border-[var(--accent)]/30 shadow-sm w-max">
+                <Sparkles size={12} className="text-[var(--accent)]" /> Premium Collection
               </span>
-              <h1 className="text-4xl md:text-7xl font-bold tracking-tight mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                Elevate Your <span className="text-[var(--accent)]">Style</span>
+              
+              <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight drop-shadow-lg leading-[1.15]" style={{ fontFamily: 'var(--font-heading)' }}>
+                Elevate Your <br className="hidden md:block"/>
+                <span className="text-[var(--accent)] drop-shadow-md">Signature Style</span>
               </h1>
-              <p className="text-lg md:text-xl text-white/80 max-w-lg mx-auto mb-8 font-medium">
-                Discover the latest trends in high-quality fashion and accessories.
+              
+              <p className="text-xs md:text-sm text-white/90 max-w-[400px] mb-4 font-medium drop-shadow-sm leading-relaxed">
+                Step into the new season with our exclusive curation of modern cuts, luxury fabrics, and timeless accessories designed to make you stand out.
               </p>
-              <div className="flex gap-4 justify-center">
-                <Button variant="orange" size="lg" className="rounded-2xl px-8 shadow-xl">
-                  Shop All Products
+              
+              <div className="flex flex-wrap gap-3 md:gap-4 mt-2">
+                <Button className="rounded-xl px-5 md:px-7 h-9 md:h-10 shadow-[0_4px_15px_rgba(255,165,0,0.3)] hover:shadow-[0_6px_20px_rgba(255,165,0,0.5)] hover:-translate-y-0.5 transition-all text-white border-none bg-[var(--accent)] hover:bg-[var(--accent-dark)] font-bold text-[10px] md:text-[11px] tracking-wide">
+                  Shop Men's
                 </Button>
-                <Button variant="outline" size="lg" className="rounded-2xl border-white text-white hover:bg-white/10 px-8 shadow-xl">
-                  View Collections
+                <Button className="rounded-xl px-5 md:px-7 h-9 md:h-10 shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all text-white border border-white/40 bg-white/10 hover:bg-white/20 backdrop-blur-md font-bold text-[10px] md:text-[11px] tracking-wide">
+                  Shop Women's
                 </Button>
               </div>
             </div>
@@ -133,9 +142,7 @@ const UserDashboard = () => {
             ref={topProductsRef}
           >
             {topProducts.map((product) => (
-              <div key={product._id} className="min-w-[280px] md:min-w-[320px]">
-                <UserProductCardHoriz product={product} />
-              </div>
+              <UserProductCardHoriz key={product._id} product={product} />
             ))}
           </div>
         </section>
@@ -197,9 +204,7 @@ const UserDashboard = () => {
             ref={newArrivalsRef}
           >
             {newArrivals.map((product) => (
-              <div key={product._id} className="min-w-[280px] md:min-w-[320px]">
-                <UserProductCardHoriz product={product} />
-              </div>
+              <UserProductCardHoriz key={product._id} product={product} />
             ))}
           </div>
         </section>

@@ -79,6 +79,10 @@ const router = createBrowserRouter([
         element: <PrivateRoute allowedRoles={['admin']} />,
         children: [
           {
+            path: "admin/dashboard",
+            element: <Admindashboard />,
+          },
+          {
             path: "admin/category",
             element: <Category />,
           },
