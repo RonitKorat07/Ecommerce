@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById, fetchRecommendedProducts } from "../../redux/Productslice";
 import Recommendproduct from "./Recommendproduct";
-import toast from "react-hot-toast";
+import useToast from "../UI/Toast/useToast";
 import { addToCart } from "../../redux/Cartslice";
 import Button from "../UI/Button";
 import { ShoppingBag, Zap, Share2, Heart, ShieldCheck, Truck, RotateCcw, Star, Search } from "lucide-react";
@@ -11,6 +11,7 @@ import { ShoppingBag, Zap, Share2, Heart, ShieldCheck, Truck, RotateCcw, Star, S
 const Productdetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const { showToast } = useToast();
 
   const { currentProduct: product, loading, error, recommendedProducts } = useSelector(
     (state) => state.products
@@ -83,7 +84,7 @@ const Productdetails = () => {
 
   const handleAddToCart = async () => {
     if (!selectedSize || !selectedColor) {
-      toast.error("Please select a size and color before adding to cart.");
+      showToast("Selection Required", "Please select a size and color before adding to cart.", "warning");
       return;
     }
 
@@ -97,9 +98,9 @@ const Productdetails = () => {
           quantity: 1,
         })
       ).unwrap();
-      toast.success(res.message || "Added to cart successfully!");
+      showToast("Success", res.message || "Added to cart successfully!", "success");
     } catch (error) {
-      toast.error(error);
+      showToast("Error", error || "Failed to add to cart", "error");
     }
   };
 

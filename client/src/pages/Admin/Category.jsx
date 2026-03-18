@@ -7,7 +7,8 @@ import {
   deleteCategory,
 } from "../../redux/Categoryslice";
 import { imageuploade } from "../../helper/imageuploade";
-import toast from "react-hot-toast";
+import useToast from "../../components/UI/Toast/useToast";
+import useModal from "../../components/UI/Modal/useModal";
 import Button from "../../components/UI/Button";
 import Input from "../../components/UI/Input";
 import { Plus, Pencil, Trash2, X, Image as ImageIcon, Search, FolderOpen, LayoutGrid, List } from "lucide-react";
@@ -15,6 +16,8 @@ import { Plus, Pencil, Trash2, X, Image as ImageIcon, Search, FolderOpen, Layout
 const Category = () => {
   const dispatch = useDispatch();
   const { items, isLoading } = useSelector((state) => state.category);
+  const { showToast } = useToast();
+  const { openModal } = useModal();
 
   const [name, setName] = useState("");
   const [imageFile, setImageFile] = useState(null);
@@ -47,7 +50,7 @@ const Category = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || (!imageFile && !editId)) {
-      toast.error("Please enter name and select image.");
+      showToast("Input Required", "Please enter name and select image.", "warning");
       return;
     }
 
@@ -60,15 +63,15 @@ const Category = () => {
 
       if (editId) {
         dispatch(updateCategory({ id: editId, name, image: imageUrl }));
-        toast.success("Category updated.");
+        showToast("Category Updated", "Category updated.", "success");
       } else {
         dispatch(addCategory({ name, image: imageUrl }));
-        toast.success("Category added.");
+        showToast("Category Added", "Category added.", "success");
       }
       resetForm();
       setShowForm(false);
     } catch (err) {
-      toast.error("Something went wrong.");
+      showToast("Error", "Something went wrong.", "error");
     } finally {
       setLoading(false);
     }
@@ -83,9 +86,15 @@ const Category = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this category?")) {
-      dispatch(deleteCategory(id));
-    }
+    openModal({
+      title: 'Delete Category?',
+      type: 'danger',
+      content: 'Are you sure you want to delete this category? This will affect all associated products.',
+      confirmText: 'Delete Category',
+      onConfirm: () => {
+        dispatch(deleteCategory(id));
+      }
+    });
   };
 
   const filteredItems = items.filter((cat) =>

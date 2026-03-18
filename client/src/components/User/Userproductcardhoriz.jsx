@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../UI/Button';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBasket } from 'lucide-react';
 
 const UserProductCardHoriz = ({ product }) => {
   const navigate = useNavigate();
@@ -49,9 +49,9 @@ const UserProductCardHoriz = ({ product }) => {
           <Button
             variant="ghost"
             size="sm"
-            className="w-full h-8 md:h-10 text-[10px] md:text-xs bg-[var(--bg-body)] hover:bg-[var(--primary)] hover:text-white rounded-xl gap-2 font-bold"
+            className="w-full h-8 md:h-10 text-[10px] md:text-xs bg-white border-2 border-slate-100 hover:border-[var(--primary)] hover:bg-[var(--primary)] hover:text-white rounded-xl gap-2 font-bold transition-all"
           >
-            <ShoppingBag size={14} />
+            <ShoppingBasket size={14} />
             Quick Add
           </Button>
         </div>

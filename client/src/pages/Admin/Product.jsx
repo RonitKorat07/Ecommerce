@@ -8,12 +8,15 @@ import Button from '../../components/UI/Button';
 import Select from '../../components/UI/Select';
 import { Card, CardBody } from '../../components/UI/Card';
 import { Plus, Search, LayoutGrid, List, X, Package, SlidersHorizontal } from 'lucide-react';
-import toast from 'react-hot-toast';
+import useToast from '../../components/UI/Toast/useToast';
+import useModal from '../../components/UI/Modal/useModal';
 
 const Product = () => {
   const dispatch = useDispatch();
   const [showForm, setShowForm] = useState(false);
   const [productToEdit, setProductToEdit] = useState(null);
+  const { showToast } = useToast();
+  const { openModal } = useModal();
 
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [stockStatus, setStockStatus] = useState('all');
@@ -43,14 +46,20 @@ const Product = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      dispatch(deleteProduct(id))
-        .then(() => toast.success('Product deleted successfully'))
-        .catch(error => {
-          toast.error('Failed to delete product');
-          console.error('Delete error:', error);
-        });
-    }
+    openModal({
+      title: 'Delete Product?',
+      type: 'danger',
+      content: 'Are you sure you want to delete this product? This action cannot be undone.',
+      confirmText: 'Delete Product',
+      onConfirm: () => {
+        dispatch(deleteProduct(id))
+          .then(() => showToast("Product Deleted", 'Product deleted successfully', "success"))
+          .catch(error => {
+            showToast("Delete Failed", 'Failed to delete product', "error");
+            console.error('Delete error:', error);
+          });
+      }
+    });
   };
 
   // Filter and sort

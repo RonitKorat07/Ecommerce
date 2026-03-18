@@ -25,7 +25,7 @@ export const user_signin_controller = async (req, res) => {
             role: user.role,
         };
 
-        const token = jwt.sign(payload, process.env.JWT, { expiresIn: '1m' });  // expires in 1 hour
+        const token = jwt.sign(payload, process.env.JWT, { expiresIn: '7d' });  // expires in 7 days
 
         res.status(200).json({
             success: true,

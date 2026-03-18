@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import convertToBase64 from '../utils/imagetobase64';
 import axiosClient from '../api/axiosClient';
 import API from '../api/endpoints';
-import toast from 'react-hot-toast';
+import useToast from '../components/UI/Toast/useToast';
 import Logo from '../components/Logo';
 
 const Signup = () => {
@@ -18,6 +18,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,10 +37,10 @@ const Signup = () => {
           ...prev,
           fileBase64: base64,
         }));
-        toast.success('Profile picture updated!');
+        showToast("Success", 'Profile picture updated!', "success");
       } catch (error) {
         console.error('Error converting file:', error);
-        toast.error('Image conversion failed!');
+        showToast("Error", 'Image conversion failed!', "error");
       }
     }
   };
@@ -50,13 +51,13 @@ const Signup = () => {
 
     try {
       const response = await axiosClient.post(API.auth.signup, formData);
-      toast.success('Account created successfully!');
+      showToast("Success", 'Account created successfully!', "success");
       setTimeout(() => {
         navigate('/signin', { replace: true });
       }, 1500);
     } catch (error) {
       console.error('Error during signup:', error);
-      toast.error(error.response?.data?.message || 'Signup failed. Please try again.');
+      showToast("Error", error.response?.data?.message || 'Signup failed. Please try again.', "error");
     } finally {
       setLoading(false);
     }

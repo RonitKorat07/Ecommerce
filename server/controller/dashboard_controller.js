@@ -71,6 +71,102 @@ export const getDashboardStats = async (req, res) => {
 
     const totalRevenue = revenueResult.length > 0 ? revenueResult[0].total : 0;
 
+    // Timeframes calculations
+    const now = new Date();
+    const startOfToday = new Date(now.setHours(0, 0, 0, 0));
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const [
+      todayRevenueResult,
+      last7DaysRevenue,
+      last30DaysRevenue,
+      allTimeRevenue
+    ] = await Promise.all([
+      // Today
+      Order.aggregate([
+        { $match: { createdAt: { $gte: startOfToday } } },
+        { $group: { _id: null, total: { $sum: "$finalPrice" } } }
+      ]),
+      // Last 7 Days (Daily)
+      Order.aggregate([
+        { $match: { createdAt: { $gte: sevenDaysAgo } } },
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+            revenue: { $sum: "$finalPrice" }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ]),
+      // Last 30 Days (Daily)
+      Order.aggregate([
+        { $match: { createdAt: { $gte: thirtyDaysAgo } } },
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+            revenue: { $sum: "$finalPrice" }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ]),
+      // All Time (Monthly)
+      Order.aggregate([
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+            revenue: { $sum: "$finalPrice" }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ])
+    ]);
+
+    const todayRevenue = todayRevenueResult.length > 0 ? todayRevenueResult[0].total : 0;
+
+    // Order Status Distribution with fallback for old data
+    const orderStatusStats = await Order.aggregate([
+      {
+        $group: {
+          _id: { $ifNull: ["$status", "processing"] },
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    // Top Selling Products
+    const topProducts = await Order.aggregate([
+      { $unwind: "$items" },
+      {
+        $group: {
+          _id: "$items.productId",
+          totalSold: { $sum: "$items.quantity" },
+          revenue: { $sum: { $multiply: ["$items.quantity", "$totalPrice"] } } 
+        }
+      },
+      { $sort: { totalSold: -1 } },
+      { $limit: 8 },
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "_id",
+          as: "productInfo"
+        }
+      },
+      { $unwind: "$productInfo" },
+      {
+        $project: {
+          name: "$productInfo.name",
+          image: { $arrayElemAt: ["$productInfo.images", 0] },
+          totalSold: 1,
+          revenue: 1
+        }
+      }
+    ]);
+
     res.status(200).json({
       success: true,
       stats: {
@@ -82,6 +178,12 @@ export const getDashboardStats = async (req, res) => {
         recentOrders,
         lowStockProducts,
         topCategories,
+        todayRevenue,
+        last7DaysRevenue,
+        last30DaysRevenue,
+        allTimeRevenue,
+        orderStatusStats,
+        topProducts
       },
     });
   } catch (error) {

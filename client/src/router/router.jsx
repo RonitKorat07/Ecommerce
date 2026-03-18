@@ -14,6 +14,7 @@ import Checkoutpage from "../pages/User/Checkoutpage.jsx";
 import Myorder from "../pages/User/Myorder.jsx";
 import Allorderpage from "../pages/Admin/Allorderpage.jsx";
 import SearchPage from "../pages/User/SearchPage.jsx";
+import Profile from "../pages/User/Profile.jsx";
 
 import AuthRoute from "./AuthRoute.jsx";
 
@@ -38,22 +39,28 @@ const router = createBrowserRouter([
       },
 
 
-      // USER routes with PrivateRoute
+      // PUBLIC USER routes (Visible without login)
+      {
+        index: true,
+        element: <Userdashboard />,
+      },
+      {
+        path: "user/product/:id",
+        element: <Productpage />,
+      },
+      {
+        path: "/user/category/:categoryId",
+        element: <Categorywiseproduct />,
+      },
+      {
+        path: "/search",
+        element: <SearchPage />,
+      },
+
+      // PROTECTED USER routes
       {
         element: <PrivateRoute allowedRoles={['user']} />,
         children: [
-          {
-            path: "/",
-            element: <Userdashboard />,
-          },
-          {
-            path: "user/product/:id",
-            element: <Productpage />,
-          },
-          {
-            path: "/user/category/:categoryId",
-            element: <Categorywiseproduct />,
-          },
           {
             path: "/user/addtocart",
             element: <Addtocart />,
@@ -67,8 +74,8 @@ const router = createBrowserRouter([
             element: <Myorder />,
           },
           {
-            path: "/search",
-            element: <SearchPage />,
+            path: "/profile",
+            element: <Profile />,
           },
           // aur bhi user routes...
         ],

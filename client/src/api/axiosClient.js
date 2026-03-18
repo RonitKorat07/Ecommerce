@@ -7,6 +7,13 @@ const axiosClient = axios.create({
   },
 });
 
+// const axiosClient = axios.create({
+//   baseURL: 'http://localhost:5000/api',
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
+
 // Request Interceptor to add token
 axiosClient.interceptors.request.use(
   (config) => {

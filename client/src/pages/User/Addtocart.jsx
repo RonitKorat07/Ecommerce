@@ -7,7 +7,7 @@ import {
   fetchCheckoutSummary,
 } from "../../redux/Cartslice";
 import { ShoppingBag, Trash2, Minus, Plus, ArrowLeft, ShieldCheck, Truck, ChevronRight } from "lucide-react";
-import toast from "react-hot-toast";
+import useToast from "../../components/UI/Toast/useToast";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/UI/Button";
 
@@ -16,6 +16,7 @@ const Addtocart = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const user = useSelector((state) => state.user.user);
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   useEffect(() => {
@@ -27,7 +28,7 @@ const Addtocart = () => {
 
   const handleRemove = (itemId) => {
     dispatch(removeFromCart({ userId: user._id, itemId }));
-    toast.success("Item removed from bag");
+    showToast("Removed", "Item removed from bag", "success");
   };
 
   const handleQuantityChange = (item, newQuantity) => {
@@ -42,7 +43,7 @@ const Addtocart = () => {
       })
     )
       .unwrap()
-      .catch(() => toast.error("Stock limit reached"));
+      .catch(() => showToast("Limit Reached", "Stock limit reached", "warning"));
   };
 
   const handleCheckout = () => {
@@ -69,31 +70,31 @@ const Addtocart = () => {
     <div className="min-h-screen bg-[var(--bg-body)] pb-16 font-[var(--font-body)] animate-in fade-in duration-700">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         
-        {/* Modern Step Indicator (More Compact) */}
-        <div className="flex items-center justify-between mb-6 overflow-x-auto pb-1 scrollbar-none">
-          <div className="flex items-center gap-6 min-w-max">
-            <div className="flex items-center gap-2.5 group">
-              <div className="w-7 h-7 rounded-full bg-[var(--primary)] text-white flex items-center justify-center text-[10px] font-bold shadow-md shadow-[var(--primary)]/20 ring-2 ring-[var(--primary-light)] transition-premium">1</div>
-              <span className="text-[13px] font-bold text-[var(--primary)] tracking-tight">Shopping Bag</span>
+        {/* Simplified Step Indicator */}
+        <div className="flex items-center justify-between mb-5 overflow-x-auto pb-1 scrollbar-none">
+          <div className="flex items-center gap-4 min-w-max">
+            <div className="flex items-center gap-2 group">
+              <div className="w-6 h-6 rounded-full bg-[var(--primary)] text-white flex items-center justify-center text-[9px] font-bold shadow-md shadow-[var(--primary)]/20 ring-1 ring-[var(--primary-light)] transition-premium">1</div>
+              <span className="text-[12px] font-bold text-[var(--primary)] tracking-tight">Cart</span>
             </div>
-            <ChevronRight size={14} className="text-[var(--border-light)]" />
-            <div className="flex items-center gap-2.5 opacity-40 group hover:opacity-100 transition-opacity cursor-pointer" onClick={() => handleCheckout()}>
-              <div className="w-7 h-7 rounded-full bg-white border border-[var(--border-light)] text-[var(--text-muted)] flex items-center justify-center text-[10px] font-bold transition-premium">2</div>
-              <span className="text-[13px] font-semibold text-[var(--text-muted)] tracking-tight">Checkout</span>
+            <ChevronRight size={12} className="text-[var(--border-light)]" />
+            <div className="flex items-center gap-2 opacity-40 group hover:opacity-100 transition-opacity cursor-pointer" onClick={() => handleCheckout()}>
+              <div className="w-6 h-6 rounded-full bg-white border border-[var(--border-light)] text-[var(--text-muted)] flex items-center justify-center text-[9px] font-bold transition-premium">2</div>
+              <span className="text-[12px] font-semibold text-[var(--text-muted)] tracking-tight">Checkout</span>
             </div>
-            <ChevronRight size={14} className="text-[var(--border-light)]" />
-            <div className="flex items-center gap-2.5 opacity-40">
-              <div className="w-7 h-7 rounded-full bg-white border border-[var(--border-light)] text-[var(--text-muted)] flex items-center justify-center text-[10px] font-bold">3</div>
-              <span className="text-[13px] font-semibold text-[var(--text-muted)] tracking-tight">Payment</span>
+            <ChevronRight size={12} className="text-[var(--border-light)]" />
+            <div className="flex items-center gap-2 opacity-40">
+              <div className="w-6 h-6 rounded-full bg-white border border-[var(--border-light)] text-[var(--text-muted)] flex items-center justify-center text-[9px] font-bold">3</div>
+              <span className="text-[12px] font-semibold text-[var(--text-muted)] tracking-tight">Payment</span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-baseline justify-between mb-6 border-b border-[var(--border-light)] pb-4">
-          <h1 className="text-2xl md:text-3xl font-extrabold text-[var(--text-main)] font-[var(--font-heading)] tracking-tight">
-            Shopping <span className="text-[var(--primary)]">Bag</span>
+        <div className="flex items-baseline justify-between mb-5 border-b border-[var(--border-light)] pb-3">
+          <h1 className="text-xl md:text-2xl font-black text-[var(--text-main)] font-[var(--font-heading)] tracking-tighter">
+            Shopping <span className="text-[var(--primary)] text-lg">Bag</span>
           </h1>
-          <p className="text-[var(--text-muted)] font-medium text-xs bg-[var(--bg-section)] px-2.5 py-0.5 rounded-full">
+          <p className="text-[var(--text-muted)] font-black text-[9px] bg-[var(--bg-section)] px-2 py-0.5 rounded-md uppercase tracking-wider">
             {cartItems.reduce((acc, item) => acc + item.quantity, 0)} Items
           </p>
         </div>
@@ -275,14 +276,13 @@ const Addtocart = () => {
                   <Button
                     onClick={handleCheckout}
                     loading={isCheckingOut}
-                    className="w-full py-3.5 rounded-xl text-sm font-black text-white shadow-lg shadow-[var(--accent)]/20 transition-premium border-none relative overflow-hidden group"
+                    className="w-full h-11 rounded-lg text-xs font-black text-white shadow-lg shadow-[var(--accent)]/15 transition-premium border-none relative overflow-hidden group"
                     style={{ background: 'var(--gradient-accent)' }}
                   >
-                    <span className="relative z-10 flex items-center justify-center gap-2 uppercase tracking-widest text-[12px]">
-                      Place Order
-                      {!isCheckingOut && <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" /> }
+                    <span className="relative z-10 flex items-center justify-center gap-2 uppercase tracking-widest text-[11px]">
+                      Checkout
+                      {!isCheckingOut && <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" /> }
                     </span>
-                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
                   </Button>
                   
                   <button 

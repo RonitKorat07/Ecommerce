@@ -1,115 +1,137 @@
 import React, { useState } from 'react';
 import OrderModal from './OrderModal';
-import { Eye, Calendar, User, MapPin, CreditCard, Hash } from 'lucide-react';
+import { Eye, Calendar, MapPin, CreditCard, CheckCircle2, Package, ChevronRight, TrendingUp } from 'lucide-react';
 
 const OrderList = ({ orders, role }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   return (
-    <div className="overflow-x-auto w-full">
-      <table className="w-full text-left border-collapse">
-        <thead>
-          <tr className="bg-[var(--bg-body)]/60">
-            <th className="py-3 px-5 text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)]">
-              <div className="flex items-center gap-1.5"><Hash size={11} /> Order ID</div>
-            </th>
-            <th className="py-3 px-5 text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)]">
-              <div className="flex items-center gap-1.5"><Calendar size={11} /> Date</div>
-            </th>
-            {role === 'admin' ? (
-              <th className="py-3 px-5 text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)]">
-                <div className="flex items-center gap-1.5"><User size={11} /> Customer</div>
-              </th>
-            ) : (
-              <th className="py-3 px-5 text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)]">
-                <div className="flex items-center gap-1.5"><MapPin size={11} /> City</div>
-              </th>
-            )}
-            <th className="py-3 px-5 text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)]">
-              <div className="flex items-center gap-1.5"><CreditCard size={11} /> Payment</div>
-            </th>
-            <th className="py-3 px-5 text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)] text-right">Amount</th>
-            <th className="py-3 px-5 text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)] text-center">Action</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-[var(--border-light)]">
-          {orders.map((order) => (
-            <tr
-              key={order._id}
-              className="hover:bg-[var(--bg-body)]/40 transition-colors group"
-            >
-              {/* Order ID */}
-              <td className="py-3.5 px-5">
-                <span className="font-mono text-[11px] font-bold bg-[var(--bg-body)] px-2.5 py-1 rounded-md border border-[var(--border-light)] text-[var(--text-main)] group-hover:bg-white group-hover:border-[var(--primary-light)] transition-all">
-                  #{order._id.slice(-8).toUpperCase()}
-                </span>
-              </td>
+    <div className="space-y-4 px-0 pb-2">
+      {/* Header Info */}
+      <div className="flex items-center justify-between px-4 py-2.5 mx-4 mt-4 bg-[var(--bg-body)] rounded-lg border border-[var(--border-light)] mb-4">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-md bg-white shadow-sm flex items-center justify-center text-[var(--primary)]">
+            <Package size={16} />
+          </div>
+          <div>
+            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-0.5">Total Orders</p>
+            <h4 className="text-sm font-bold text-slate-800 leading-none">{orders.length} <span className="text-[var(--primary)]">Orders</span></h4>
+          </div>
+        </div>
+        <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-50 text-emerald-600 border border-emerald-100">
+          <TrendingUp size={12} />
+          <span className="text-[9px] font-bold uppercase tracking-wider">Active Status</span>
+        </div>
+      </div>
 
-              {/* Date */}
-              <td className="py-3.5 px-5">
-                <div>
-                  <span className="text-[13px] font-semibold text-[var(--text-main)]">
-                    {new Date(order.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                  </span>
-                  <span className="text-[10px] text-[var(--text-muted)] ml-1.5">
-                    {new Date(order.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+      <div className="grid grid-cols-1 gap-3 px-4 pb-2">
+        {orders.map((order) => (
+          <div
+            key={order._id}
+            className="group relative bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-lg hover:shadow-slate-200/50 hover:border-[var(--primary-light)] transition-all duration-300 overflow-hidden"
+          >
+            {/* Top Bar with ID and Status */}
+            <div className="flex items-center justify-between p-3 border-b border-slate-50 bg-slate-50/30">
+              <div className="flex items-center gap-2">
+                <div className="flex flex-col">
+                  <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1 pl-0.5">Reference</span>
+                  <span className="font-mono text-[10px] font-bold bg-white px-2 py-1 rounded-md border border-slate-100 text-slate-600 shadow-sm group-hover:text-[var(--primary)] group-hover:border-[var(--primary-light)] transition-colors">
+                    #{order._id.slice(-8).toUpperCase()}
                   </span>
                 </div>
-              </td>
+              </div>
 
-              {/* Customer / City */}
-              {role === 'admin' ? (
-                <td className="py-3.5 px-5">
-                  <div>
-                    <span className="text-[13px] font-semibold text-[var(--text-main)] block">{order.shippingAddress.fullName}</span>
-                    <span className="text-[10px] text-[var(--text-muted)] truncate block max-w-[150px]">{order.shippingAddress.email}</span>
-                  </div>
-                </td>
-              ) : (
-                <td className="py-3.5 px-5">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--primary)] bg-[var(--primary-light)] px-2.5 py-1 rounded-md">
-                    <MapPin size={11} />
-                    {order.shippingAddress.city}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-sm shadow-emerald-100/30">
+                  <CheckCircle2 size={10} className="animate-pulse" />
+                  <span className="text-[9px] font-bold uppercase tracking-tight">Confirmed</span>
+                </div>
+                <button
+                  onClick={() => setSelectedOrder(order)}
+                  className="w-7 h-7 rounded-md bg-white text-slate-400 hover:bg-[var(--primary)] hover:text-white hover:shadow-sm transition-all flex items-center justify-center border border-slate-100"
+                >
+                  <Eye size={14} />
+                </button>
+              </div>
+            </div>
+
+            {/* Main Content Body */}
+            <div className="p-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center">
+              
+              {/* Date & Time */}
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300 shadow-sm">
+                  <Calendar size={14} />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Order Date</span>
+                  <span className="text-xs font-bold text-slate-800 tracking-tight">
+                    {new Date(order.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                   </span>
-                </td>
-              )}
+                  <span className="text-[9px] text-slate-500 font-semibold mt-0.5">
+                    {new Date(order.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                </div>
+              </div>
 
-              {/* Payment */}
-              <td className="py-3.5 px-5">
-                <div>
-                  <span className="text-[11px] font-bold text-[var(--text-main)] uppercase tracking-tight">
+              {/* Location/Customer */}
+              <div className="flex items-start gap-3 border-l-0 md:border-l border-slate-100 pl-0 md:pl-4">
+                <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-500 group-hover:text-white transition-all duration-300 shadow-sm">
+                  <MapPin size={14} />
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Shipping To</span>
+                  {role === 'admin' ? (
+                    <>
+                      <span className="text-xs font-bold text-slate-800 tracking-tight truncate">{order.shippingAddress.fullName}</span>
+                      <span className="text-[9px] text-slate-500 font-semibold truncate mt-0.5">{order.shippingAddress.email}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-xs font-bold text-slate-800 tracking-tight">{order.shippingAddress.city}</span>
+                      <span className="text-[9px] text-slate-500 font-semibold truncate mt-0.5">{order.shippingAddress.address?.slice(0, 25)}...</span>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Payment Info */}
+              <div className="flex items-start gap-3 border-l-0 md:border-l border-slate-100 pl-0 md:pl-4">
+                <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-500 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300 shadow-sm">
+                  <CreditCard size={14} />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Payment info</span>
+                  <span className="text-xs font-bold text-slate-800 tracking-tight flex items-center gap-1.5">
                     {order.paymentMode || 'COD'}
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   </span>
-                  <div className="flex items-center gap-1 mt-0.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    <span className="text-[10px] font-semibold text-emerald-600 uppercase">Paid</span>
-                  </div>
+                  <span className="text-[9px] text-emerald-600 font-bold uppercase mt-0.5">Success</span>
                 </div>
-              </td>
+              </div>
 
-              {/* Amount */}
-              <td className="py-3.5 px-5 text-right">
-                <span className="text-[15px] font-bold text-[var(--text-main)]">
-                  ₹{order.finalPrice.toFixed(0)}
-                </span>
-              </td>
-
-              {/* Action */}
-              <td className="py-3.5 px-5">
-                <div className="flex justify-center">
-                  <button
-                    onClick={() => setSelectedOrder(order)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-[var(--primary)] bg-[var(--primary-light)] hover:bg-[var(--primary)] hover:text-white transition-all"
-                  >
-                    <Eye size={13} />
-                    View
-                  </button>
+              {/* Amount & CTA */}
+              <div className="flex md:flex-col lg:flex-row items-center justify-between lg:justify-end gap-3 lg:gap-5 bg-slate-50/50 md:bg-transparent p-3 md:p-0 rounded-lg md:pl-4 border-t md:border-t-0 md:border-l border-slate-100">
+                <div className="flex flex-col items-end md:items-start lg:items-end">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Grand Total</span>
+                  <span className="text-lg font-bold text-[var(--primary)] tracking-tight">
+                    ₹{order.finalPrice.toLocaleString()}
+                  </span>
                 </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                <button 
+                  onClick={() => setSelectedOrder(order)}
+                  className="flex items-center gap-1 px-3 py-2 rounded-lg bg-white border border-slate-100 text-[var(--primary)] font-bold text-[10px] uppercase tracking-wider hover:bg-[var(--primary)] hover:text-white hover:shadow-md transition-all"
+                >
+                  Details <ChevronRight size={12} />
+                </button>
+              </div>
+            </div>
+            
+            {/* Subtle bottom accent line */}
+            <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-[var(--primary)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          </div>
+        ))}
+      </div>
 
       {selectedOrder && (
         <OrderModal

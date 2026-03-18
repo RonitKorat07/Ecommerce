@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/Categoryslice";
 import { imageuploade } from "../../helper/imageuploade";
 import { addProduct, fetchProducts, updateProduct } from "../../redux/Productslice";
-import toast from "react-hot-toast";
+import useToast from "../UI/Toast/useToast";
 
 function ProductForm({ existingProduct, onClose }) {
   const dispatch = useDispatch();
+  const { showToast } = useToast();
   const { items: categories, error } = useSelector((state) => state.category);
   const [formData, setFormData] = useState({
     name: "",
@@ -78,11 +79,11 @@ function ProductForm({ existingProduct, onClose }) {
           id: existingProduct._id,
           data: productData
         })).unwrap();
-        toast.success("Product updated successfully!");
+        showToast("Product Updated", "Product updated successfully!", "success");
       } else {
         // ADD
         await dispatch(addProduct(productData)).unwrap();
-        toast.success("New product added successfully!");
+        showToast("Product Added", "New product added successfully!", "success");
       }
 
       await dispatch(fetchProducts()); // ✅ refresh products list
@@ -98,7 +99,7 @@ function ProductForm({ existingProduct, onClose }) {
         images: [],
       });
     } catch (error) {
-      alert("Failed to submit product");
+      showToast("Submit Error", "Failed to submit product", "error");
       console.error("Submit error:", error);
     }
   };

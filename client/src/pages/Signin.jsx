@@ -5,7 +5,7 @@ import axiosClient from '../api/axiosClient';
 import API from '../api/endpoints';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/Userslice';
-import toast from 'react-hot-toast';
+import useToast from '../components/UI/Toast/useToast';
 import Logo from '../components/Logo';
 
 const Signin = () => {
@@ -17,6 +17,7 @@ const Signin = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,18 +39,18 @@ const Signin = () => {
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
 
-        toast.success(`Welcome back, ${user.name}!`);
+        showToast("Welcome back!", `Welcome back, ${user.name}!`, "success");
         if (user.role === 'admin') {
           navigate('/admin/product', { replace: true });
         } else {
           navigate('/', { replace: true });
         }
       } else {
-        toast.error('Invalid login response!');
+        showToast("Invalid Login", 'Invalid login response!', "error");
       }
     } catch (error) {
       console.error('Login Error:', error);
-      toast.error(error.response?.data?.message || 'Login failed. Please check your credentials.');
+      showToast("Login Error", error.response?.data?.message || 'Login failed. Please check your credentials.', "error");
     } finally {
       setLoading(false);
     }

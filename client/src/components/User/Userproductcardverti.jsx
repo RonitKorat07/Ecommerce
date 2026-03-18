@@ -1,9 +1,9 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import Button from '../UI/Button';
-import { ShoppingBag, Eye } from 'lucide-react';
+import { ShoppingBasket, Eye } from 'lucide-react';
 
-const Userproductcardverti = ({product}) => {
+const Userproductcardverti = ({product, showDetails = false}) => {
   const navigate = useNavigate();
   const discountPrice = product.price - (product.price * product.discount) / 100;
 
@@ -42,6 +42,11 @@ const Userproductcardverti = ({product}) => {
           <h3 className="font-bold text-[var(--text-main)] text-base line-clamp-2 leading-tight group-hover:text-[var(--primary)] transition-colors min-h-[3rem]">
             {product.name}
           </h3>
+          {showDetails && product.description && (
+             <p className="text-[11px] text-[var(--text-muted)] line-clamp-2 font-medium">
+                {product.description}
+             </p>
+          )}
         </div>
 
         <div className="mt-auto space-y-4">
@@ -54,9 +59,9 @@ const Userproductcardverti = ({product}) => {
 
           <Button 
             variant="orange" 
-            className="w-full h-11 rounded-2xl gap-2 font-bold shadow-md hover:shadow-xl transition-all"
+            className="w-full h-11 rounded-xl gap-2 font-bold shadow-md hover:shadow-xl transition-all border-2 border-[var(--accent)]"
           >
-            <ShoppingBag size={18} />
+            <ShoppingBasket size={18} />
             Add to Cart
           </Button>
         </div>

@@ -67,8 +67,8 @@ const UserDashboard = () => {
       </section>
 
       <div className="max-w-[1400px] mx-auto px-4 lg:px-8 space-y-16">
-        {/* Hero Banner */}
-        <section className="relative group overflow-hidden rounded-[2.5rem] h-[250px] md:h-[350px] lg:h-[400px] shadow-2xl transition-all hover:shadow-[0_20px_60px_rgba(0,0,0,0.15)] hover:scale-[1.002]">
+        {/* Refined Hero Banner */}
+        <section className="relative group overflow-hidden rounded-[2rem] h-[220px] md:h-[300px] lg:h-[340px] shadow-2xl transition-all hover:shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
           <div
             className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
             style={{
@@ -76,30 +76,29 @@ const UserDashboard = () => {
               backgroundPosition: 'center 40%',
             }}
           ></div>
-          {/* Dark overlay that fades to primary color tint */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent group-hover:from-black/95 transition-colors duration-500"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
           
           <div className="relative h-full flex flex-col justify-center p-6 pl-8 md:p-10 md:pl-12 lg:p-12 lg:pl-16 text-white w-full md:w-3/4 lg:w-2/3">
-            <div className="animate-in slide-in-from-left-8 duration-700 space-y-3 md:space-y-4">
-              <span className="inline-flex items-center gap-2 bg-[var(--accent)]/10 backdrop-blur-md px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-[var(--accent)] border border-[var(--accent)]/30 shadow-sm w-max">
-                <Sparkles size={12} className="text-[var(--accent)]" /> Premium Collection
+            <div className="animate-in slide-in-from-left-8 duration-700 space-y-2.5 md:space-y-3">
+              <span className="inline-flex items-center gap-2 bg-[var(--accent)]/15 backdrop-blur-md px-2.5 py-1 rounded-full text-[8px] md:text-[9px] font-black uppercase tracking-widest text-[var(--accent)] border border-[var(--accent)]/30 shadow-sm w-max">
+                <Sparkles size={10} className="text-[var(--accent)]" /> Premium Collection
               </span>
               
-              <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight drop-shadow-lg leading-[1.15]" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h1 className="text-xl md:text-3xl lg:text-4xl font-black tracking-tighter drop-shadow-lg leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
                 Elevate Your <br className="hidden md:block"/>
-                <span className="text-[var(--accent)] drop-shadow-md">Signature Style</span>
+                <span className="text-[var(--accent)]">Signature Style</span>
               </h1>
               
-              <p className="text-xs md:text-sm text-white/90 max-w-[400px] mb-4 font-medium drop-shadow-sm leading-relaxed">
-                Step into the new season with our exclusive curation of modern cuts, luxury fabrics, and timeless accessories designed to make you stand out.
+              <p className="text-[10px] md:text-xs text-white/80 max-w-[360px] mb-3 font-medium leading-relaxed">
+                Step into the new season with our exclusive curation of modern cuts and luxury fabrics.
               </p>
               
-              <div className="flex flex-wrap gap-3 md:gap-4 mt-2">
-                <Button className="rounded-xl px-5 md:px-7 h-9 md:h-10 shadow-[0_4px_15px_rgba(255,165,0,0.3)] hover:shadow-[0_6px_20px_rgba(255,165,0,0.5)] hover:-translate-y-0.5 transition-all text-white border-none bg-[var(--accent)] hover:bg-[var(--accent-dark)] font-bold text-[10px] md:text-[11px] tracking-wide">
-                  Shop Men's
+              <div className="flex flex-wrap gap-3 mt-1">
+                <Button className="rounded-lg px-5 h-8 md:h-9 shadow-lg text-white border-none bg-[var(--accent)] hover:bg-[var(--accent-dark)] font-black text-[9px] tracking-widest uppercase">
+                   Men
                 </Button>
-                <Button className="rounded-xl px-5 md:px-7 h-9 md:h-10 shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all text-white border border-white/40 bg-white/10 hover:bg-white/20 backdrop-blur-md font-bold text-[10px] md:text-[11px] tracking-wide">
-                  Shop Women's
+                <Button className="rounded-lg px-5 h-8 md:h-9 shadow-md text-white border border-white/40 bg-white/10 hover:bg-white/20 backdrop-blur-md font-black text-[9px] tracking-widest uppercase">
+                   Women
                 </Button>
               </div>
             </div>
@@ -109,11 +108,11 @@ const UserDashboard = () => {
         {/* Top Products Slider */}
         <section className="space-y-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-[var(--primary-light)] rounded-xl text-[var(--primary)]">
-                <TrendingUp size={20} />
+            <div className="flex items-center gap-2.5">
+              <div className="p-1.5 bg-[var(--primary-light)] rounded-lg text-[var(--primary)]">
+                <TrendingUp size={16} />
               </div>
-              <h2 className="text-2xl font-bold text-[var(--text-main)]" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h2 className="text-xl font-black text-[var(--text-main)] tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>
                 Best <span className="text-[var(--primary)]">Sellers</span>
               </h2>
             </div>
@@ -149,11 +148,11 @@ const UserDashboard = () => {
 
         {/* Featured Discount Grid */}
         <section className="space-y-8">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-red-100 rounded-xl text-[var(--danger)]">
-              <Percent size={20} />
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 bg-red-100 rounded-lg text-[var(--danger)]">
+              <Percent size={16} />
             </div>
-            <h2 className="text-2xl font-bold text-[var(--text-main)]" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-xl font-black text-[var(--text-main)] tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>
               Flash <span className="text-[var(--danger)]">Deals</span>
             </h2>
           </div>
