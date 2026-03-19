@@ -59,59 +59,135 @@ const Admindashboard = () => {
   const chartData = getTimeframeData();
 
   const kpis = [
-    { label: 'Total Revenue', value: formatCurrency(stats.totalRevenue), icon: <DollarSign size={20} />, bg: 'bg-emerald-50', text: 'text-emerald-500', bar: 'bg-emerald-400/20' },
-    { label: 'Orders', value: stats.totalOrders?.toLocaleString() || '0', icon: <ShoppingBag size={20} />, bg: 'bg-blue-50', text: 'text-blue-500', bar: 'bg-blue-400/20' },
-    { label: 'Products', value: stats.totalProducts?.toLocaleString() || '0', icon: <Package size={20} />, bg: 'bg-violet-50', text: 'text-violet-500', bar: 'bg-violet-400/20' },
-    { label: 'Customers', value: stats.totalUsers?.toLocaleString() || '0', icon: <Users size={20} />, bg: 'bg-orange-50', text: 'text-orange-500', bar: 'bg-orange-400/20' },
+    { 
+      label: 'Total Revenue', 
+      value: formatCurrency(stats.totalRevenue), 
+      sub: `Today: ${formatCurrency(stats.todayRevenue || 0)}`,
+      icon: <DollarSign size={20} />, 
+      gradient: 'from-emerald-400 to-teal-500', 
+      lightBg: 'bg-emerald-50',
+      textColor: 'text-emerald-600',
+      sparkColor: '#10b981',
+      sparkData: [30, 60, 40, 80, 55, 75, 90]
+    },
+    { 
+      label: 'Total Orders', 
+      value: stats.totalOrders?.toLocaleString() || '0', 
+      sub: 'All time',
+      icon: <ShoppingBag size={20} />, 
+      gradient: 'from-blue-400 to-indigo-500', 
+      lightBg: 'bg-blue-50',
+      textColor: 'text-blue-600',
+      sparkColor: '#3b82f6',
+      sparkData: [20, 45, 35, 65, 50, 70, 55]
+    },
+    { 
+      label: 'Products', 
+      value: stats.totalProducts?.toLocaleString() || '0', 
+      sub: `${stats.lowStockProducts?.length || 0} low stock`,
+      icon: <Package size={20} />, 
+      gradient: 'from-violet-400 to-purple-500', 
+      lightBg: 'bg-violet-50',
+      textColor: 'text-violet-600',
+      sparkColor: '#8b5cf6',
+      sparkData: [50, 55, 60, 58, 62, 65, 70]
+    },
+    { 
+      label: 'Customers', 
+      value: stats.totalUsers?.toLocaleString() || '0', 
+      sub: 'Registered users',
+      icon: <Users size={20} />, 
+      gradient: 'from-orange-400 to-rose-400', 
+      lightBg: 'bg-orange-50',
+      textColor: 'text-orange-600',
+      sparkColor: '#f97316',
+      sparkData: [10, 30, 20, 50, 40, 60, 80]
+    },
   ];
 
+  // Sparkline mini SVG generator
+  const Sparkline = ({ data, color }) => {
+    const max = Math.max(...data);
+    const min = Math.min(...data);
+    const range = max - min || 1;
+    const w = 80, h = 30;
+    const pts = data.map((v, i) => ({
+      x: (i / (data.length - 1)) * w,
+      y: h - ((v - min) / range) * (h - 4) - 2,
+    }));
+    const path = pts.reduce((acc, p, i, a) => {
+      if (i === 0) return `M${p.x},${p.y}`;
+      const prev = a[i-1];
+      return `${acc} C${prev.x + (p.x-prev.x)/2},${prev.y} ${prev.x + (p.x-prev.x)/2},${p.y} ${p.x},${p.y}`;
+    }, '');
+    const area = `${path} L${w},${h} L0,${h}Z`;
+    return (
+      <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-full" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id={`sg-${color.replace('#','')}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.4"/>
+            <stop offset="100%" stopColor={color} stopOpacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d={area} fill={`url(#sg-${color.replace('#','')})`}/>
+        <path d={path} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        <circle cx={pts[pts.length-1].x} cy={pts[pts.length-1].y} r="3" fill="white" stroke={color} strokeWidth="2"/>
+      </svg>
+    );
+  };
+
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-[1440px] mx-auto space-y-6 animate-in fade-in duration-500" style={{ fontFamily: 'var(--font-body)' }}>
+    <div className="p-3 sm:p-5 lg:p-7 max-w-[1440px] mx-auto space-y-5 animate-in fade-in duration-500" style={{ fontFamily: 'var(--font-body)' }}>
       
-      {/* Mini Welcome Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[var(--border-light)] pb-5 mb-2">
+      {/* Welcome Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--border-light)] pb-4">
         <div>
-          <h1 className="text-2xl font-semibold text-[var(--text-main)] flex items-center gap-2 tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>
-            Dashboard 
-            <span className="text-[var(--primary)] text-[10px] font-bold uppercase tracking-widest bg-[var(--primary-light)] px-2 py-0.5 rounded-md">PRO</span>
+          <h1 className="text-xl sm:text-2xl font-black text-[var(--text-main)] tracking-tight flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
+            Dashboard
+            <span className="text-[9px] font-black uppercase tracking-widest text-[var(--primary)] bg-[var(--primary-light)] px-2 py-0.5 rounded-md">LIVE</span>
           </h1>
-          <p className="text-sm font-medium text-[var(--text-muted)] mt-1">
-            Real-time insights tailored to your inventory and sales.
+          <p className="text-xs font-medium text-[var(--text-muted)] mt-0.5">
+            Welcome back, <span className="font-bold text-[var(--text-main)]">{user?.name}</span>.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[var(--border-light)] shadow-sm text-xs font-semibold text-[var(--text-muted)]">
-            <Clock size={14} className="text-blue-500" />
-            Active Sync
+            <Clock size={13} className="text-blue-500" />
+            Real-time
           </div>
           <Button 
             variant="primary" 
             onClick={() => navigate('/admin/order')}
-            className="h-9 px-4 rounded-lg text-xs font-semibold shadow-sm"
+            className="h-8 px-3 rounded-lg text-xs font-bold shadow-sm"
           >
-            Live Monitor
+            Orders
           </Button>
         </div>
       </div>
 
       {/* KPI Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {loading ? Array(4).fill(0).map((_, i) => (
-          <div key={i} className="h-24 bg-[var(--bg-card)] rounded-xl border border-[var(--border-light)] animate-pulse" />
+          <div key={i} className="h-32 bg-[var(--bg-card)] rounded-2xl border border-[var(--border-light)] animate-pulse" />
         )) : kpis.map((kpi, i) => (
-          <Card key={i} className="border border-[var(--border-light)] shadow-sm hover:shadow-md transition-shadow duration-300 bg-[var(--bg-card)] rounded-xl">
-            <CardBody className="p-5 flex items-center gap-4">
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${kpi.bg} ${kpi.text}`}>
-                {kpi.icon}
+          <Card key={i} className="relative overflow-hidden bg-white border border-[var(--border-light)] rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+            <CardBody className="p-4">
+              {/* Gradient blob */}
+              <div className={`absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br ${kpi.gradient} rounded-full opacity-10 group-hover:opacity-20 transition-opacity blur-xl`} />
+              
+              <div className="flex items-start justify-between mb-3">
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${kpi.lightBg} ${kpi.textColor} shrink-0`}>
+                  {kpi.icon}
+                </div>
+                <div className="w-20 h-8">
+                  <Sparkline data={kpi.sparkData} color={kpi.sparkColor} />
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider truncate mb-0.5">{kpi.label}</p>
-                <h4 className="text-2xl font-bold text-[var(--text-main)] tracking-tight">{kpi.value}</h4>
-              </div>
-              <div className="flex items-end gap-1 h-8 opacity-70">
-                 {[40, 70, 50, 90, 60].map((h, j) => (
-                   <div key={j} className={`w-1.5 rounded-t-sm ${kpi.bar}`} style={{ height: `${h}%` }} />
-                 ))}
+
+              <div>
+                <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-[0.18em] mb-1">{kpi.label}</p>
+                <h4 className="text-xl sm:text-2xl font-black text-[var(--text-main)] tracking-tighter tabular-nums leading-none">{kpi.value}</h4>
+                <p className={`text-[9px] font-bold mt-1 ${kpi.textColor} opacity-80`}>{kpi.sub}</p>
               </div>
             </CardBody>
           </Card>
@@ -153,44 +229,74 @@ const Admindashboard = () => {
                </div>
             </CardHeader>
 
-            <CardBody className="p-6 flex-1 flex flex-col justify-end">
-              <div className="h-[240px] w-full flex items-end justify-between gap-1.5 sm:gap-2">
-                {chartData?.length > 0 ? (() => {
-                  const revenues = chartData.map(it => it.revenue);
-                  const maxRev = Math.max(...revenues, 1);
-                  
-                  // Limit bars to avoid crowding
-                  const displayBars = timeframe === '30days' ? chartData.slice(-15) : chartData;
+            <CardBody className="p-6 flex-1 flex flex-col justify-end min-h-[300px] relative overflow-hidden group/chart">
+              {chartData?.length > 0 ? (() => {
+                const revenues = chartData.map(it => it.revenue);
+                const maxRev = Math.max(...revenues, 1);
+                const displayData = timeframe === '30days' ? chartData.slice(-12) : chartData;
+                const width = 1000;
+                const height = 240;
+                
+                // Generate SVG Path
+                const points = displayData.map((d, i) => ({
+                   x: (i / (displayData.length - 1)) * width,
+                   y: height - (d.revenue / maxRev) * (height - 40) - 20
+                }));
 
-                  return displayBars.map((d, i) => {
-                    const h = Math.max((d.revenue / maxRev) * 100, 5); 
-                    return (
-                      <div key={i} className="flex-1 flex flex-col items-center gap-2 group relative h-full justify-end">
-                         {/* Tooltip */}
-                         <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-[var(--text-main)] text-white text-[10px] font-medium px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none">
-                            ₹{d.revenue.toLocaleString()}
+                const pathData = points.reduce((acc, p, i, a) => {
+                  if (i === 0) return `M ${p.x},${p.y}`;
+                  const prev = a[i - 1];
+                  const cp1x = prev.x + (p.x - prev.x) / 3;
+                  const cp2x = prev.x + (p.x - prev.x) * 2 / 3;
+                  return `${acc} C ${cp1x},${prev.y} ${cp2x},${p.y} ${p.x},${p.y}`;
+                }, "");
+
+                const areaPath = `${pathData} L ${width},${height} L 0,${height} Z`;
+
+                return (
+                  <div className="w-full h-full relative" style={{ height: `${height}px` }}>
+                    {/* SVG Chart */}
+                    <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible drop-shadow-xl" preserveAspectRatio="none">
+                       <defs>
+                          <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                             <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.3" />
+                             <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
+                          </linearGradient>
+                       </defs>
+                       <path d={areaPath} fill="url(#chartGradient)" />
+                       <path d={pathData} fill="none" stroke="var(--primary)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                       
+                       {/* Points */}
+                       {points.map((p, i) => (
+                         <g key={i} className="cursor-pointer group/point">
+                            <circle cx={p.x} cy={p.y} r="6" fill="white" stroke="var(--primary)" strokeWidth="3" className="transition-all duration-300 opacity-0 group-hover/chart:opacity-100 scale-0 group-hover/chart:scale-100" />
+                            <rect x={p.x - 40} y="0" width="80" height={height} fill="transparent" />
+                         </g>
+                       ))}
+                    </svg>
+
+                    {/* Interactive Labels/Tooltips */}
+                    <div className="absolute inset-0 flex justify-between pointer-events-none">
+                       {displayData.map((d, i) => (
+                         <div key={i} className="flex-1 flex flex-col justify-end items-center group relative cursor-pointer pointer-events-auto">
+                            <div className="absolute top-0 opacity-0 group-hover:opacity-100 transition-all transform -translate-y-2 group-hover:-translate-y-4 bg-slate-900 text-white px-3 py-1.5 rounded-lg text-[9px] font-black z-30 shadow-2xl">
+                               ₹{d.revenue.toLocaleString()}
+                            </div>
+                            <div className="h-full w-full border-r border-transparent hover:border-slate-100 transition-colors" />
+                            <span className="text-[8px] font-black text-slate-400 uppercase tracking-tighter mt-4">
+                               {timeframe === 'today' ? 'Now' : new Date(d._id).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                            </span>
                          </div>
-                         {/* Bar */}
-                         <div 
-                           className={`w-full max-w-[40px] rounded-t-lg relative overflow-hidden transition-all duration-500 ease-out select-none ${timeframe === 'today' ? 'bg-emerald-500' : 'bg-blue-500/10 group-hover:bg-blue-500/20'}`} 
-                           style={{ height: `${h}%` }}
-                         >
-                            {timeframe !== 'today' && <div className="absolute bottom-0 w-full bg-blue-500 rounded-t-lg" style={{ height: '100%' }} />}
-                         </div>
-                         {/* Label */}
-                         <span className="text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-tighter truncate w-full text-center">
-                           {timeframe === 'alltime' ? d._id : timeframe === 'today' ? 'Now' : new Date(d._id).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
-                         </span>
-                      </div>
-                    );
-                  });
-                })() : (
-                  <div className="w-full h-full border-b border-[var(--border-light)] flex flex-col items-center justify-center text-[var(--text-muted)] gap-3">
-                    <Calendar size={36} strokeWidth={1.5} className="opacity-40 text-blue-500" />
-                    <span className="text-xs font-semibold tracking-wide uppercase">No records found for this period</span>
+                       ))}
+                    </div>
                   </div>
-                )}
-              </div>
+                );
+              })() : (
+                <div className="w-full h-full flex flex-col items-center justify-center text-slate-300 gap-3">
+                  <Calendar size={32} />
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em]">Data Sync Required</span>
+                </div>
+              )}
             </CardBody>
           </Card>
         </div>

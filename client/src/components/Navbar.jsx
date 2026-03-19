@@ -142,14 +142,21 @@ function Navbar({ isSidebarOpen, onToggleSidebar }) {
           {user ? (
             <Dropdown
               trigger={
-                <div className="flex items-center gap-3 pl-2 pr-4 py-1.5 rounded-2xl border-2 border-slate-100/80 cursor-pointer hover:border-[var(--primary-light)] hover:bg-white hover:shadow-md transition-all group bg-slate-50/50">
-                  <div 
-                    className="w-8 h-8 rounded-xl text-white flex items-center justify-center font-bold text-sm shadow-md transition-transform group-hover:scale-105"
-                    style={{ background: 'var(--gradient-primary)' }}
-                  >
-                    {user?.name?.[0]?.toUpperCase()}
+                <div className="flex items-center gap-2.5 pl-1.5 pr-3.5 py-1.5 rounded-2xl border-2 border-slate-100/80 cursor-pointer hover:border-[var(--primary-light)] hover:bg-white hover:shadow-md transition-all group bg-slate-50/50">
+                  {/* Avatar: show photo if exists, else initials */}
+                  <div className="w-8 h-8 rounded-xl overflow-hidden shadow-md flex-shrink-0 transition-transform group-hover:scale-105">
+                    {user?.image ? (
+                      <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div 
+                        className="w-full h-full flex items-center justify-center text-white font-bold text-sm"
+                        style={{ background: 'var(--gradient-primary)' }}
+                      >
+                        {user?.name?.[0]?.toUpperCase()}
+                      </div>
+                    )}
                   </div>
-                  <div className="hidden sm:flex items-center gap-2">
+                  <div className="hidden sm:flex items-center gap-1.5">
                     <span className="text-[13px] font-bold text-[var(--text-main)] group-hover:text-[var(--primary)] transition-colors line-clamp-1 max-w-[80px]">
                       {user?.name}
                     </span>
@@ -176,30 +183,53 @@ function Navbar({ isSidebarOpen, onToggleSidebar }) {
                 </>
               )}
               
-              <DropdownItem onClick={() => navigate("/profile")} className="gap-3 font-medium text-slate-600 flex items-center py-2.5 border-t border-slate-100">
-                <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center">
-                  <UserCircle size={16} />
-                </div>
-                <span>Account Profile</span>
-              </DropdownItem>
+              {/* Admin-only simple logout */}
+              {isAdmin ? (
+                 <DropdownItem 
+                   onClick={() => {
+                     openModal({
+                       title: 'Admin Session Logout',
+                       type: 'danger',
+                       content: 'Are you sure you want to end your administrative session?',
+                       confirmText: 'Exit Now',
+                       onConfirm: handleLogout
+                     });
+                   }} 
+                   className="text-rose-600 hover:bg-rose-50 hover:text-rose-700 gap-3 font-black rounded-xl transition-all flex items-center py-3 px-4"
+                 >
+                   <div className="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center">
+                     <LogOut size={16} />
+                   </div>
+                   <span>Secure Logout</span>
+                 </DropdownItem>
+              ) : (
+                <>
+                  <DropdownItem onClick={() => navigate("/profile")} className="gap-3 font-medium text-slate-600 flex items-center py-2.5 border-t border-slate-100">
+                    <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center">
+                      <UserCircle size={16} />
+                    </div>
+                    <span>Account Profile</span>
+                  </DropdownItem>
 
-              <DropdownItem 
-                onClick={() => {
-                  openModal({
-                    title: 'Secure Logout',
-                    type: 'danger',
-                    content: 'Are you sure you want to log out of your account? You will need to sign in again to access your data.',
-                    confirmText: 'Logout Now',
-                    onConfirm: handleLogout
-                  });
-                }} 
-                className="text-rose-600 hover:bg-rose-50 hover:text-rose-700 gap-3 font-bold rounded-xl transition-all flex items-center py-3 px-4"
-              >
-                <div className="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center">
-                  <LogOut size={16} />
-                </div>
-                <span>Secure Logout</span>
-              </DropdownItem>
+                  <DropdownItem 
+                    onClick={() => {
+                      openModal({
+                        title: 'Secure Logout',
+                        type: 'danger',
+                        content: 'Are you sure you want to log out of your account? You will need to sign in again to access your data.',
+                        confirmText: 'Logout Now',
+                        onConfirm: handleLogout
+                      });
+                    }} 
+                    className="text-rose-600 hover:bg-rose-50 hover:text-rose-700 gap-3 font-bold rounded-xl transition-all flex items-center py-3 px-4"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center">
+                      <LogOut size={16} />
+                    </div>
+                    <span>Secure Logout</span>
+                  </DropdownItem>
+                </>
+              )}
             </Dropdown>
           ) : (
             <Button 

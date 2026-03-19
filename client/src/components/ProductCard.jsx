@@ -59,71 +59,69 @@ const ProductCard = ({ product, isAdmin, onEdit, onDelete, viewMode = "grid" }) 
 
   // ── Grid View ──
   return (
-    <div className="group rounded-xl border border-[var(--border-light)] hover:border-[var(--primary)] hover:shadow-lg transition-all overflow-hidden bg-white">
+    <div className="group rounded-xl border border-[var(--border-light)] hover:border-[var(--primary)] hover:shadow-lg transition-all overflow-hidden bg-white h-full flex flex-col">
       {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-[var(--bg-body)]">
+      <div className="relative aspect-[3/4] md:aspect-[4/3] overflow-hidden bg-[var(--bg-body)]">
         <img
           src={product.images?.[0]}
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
         {/* Stock Badge */}
-        <span className={`absolute top-2 right-2 px-2 py-0.5 text-[10px] font-bold rounded-full ${
+        <span className={`absolute top-2 right-2 px-1.5 py-0.5 md:px-2 md:py-0.5 text-[8px] md:text-[10px] font-bold rounded-full ${
           product.stock === 0 ? "bg-red-500 text-white" :
           product.stock < 5 ? "bg-amber-400 text-white" :
           "bg-emerald-500 text-white"
         }`}>
-          {product.stock === 0 ? "Out of Stock" : product.stock < 5 ? `Low (${product.stock})` : "In Stock"}
+          {product.stock === 0 ? "Out" : product.stock < 5 ? `Low (${product.stock})` : "In Stock"}
         </span>
         {/* Discount Badge */}
         {discount > 0 && (
-          <span className="absolute top-2 left-2 px-2 py-0.5 text-[10px] font-bold rounded-full bg-[var(--accent)] text-white">
+          <span className="absolute top-2 left-2 px-1.5 py-0.5 md:px-2 md:py-0.5 text-[8px] md:text-[10px] font-bold rounded-full bg-[var(--accent)] text-white">
             {discount}% OFF
           </span>
         )}
       </div>
 
       {/* Info */}
-      <div className="p-3">
-        <p className="text-xs text-[var(--text-muted)] mb-0.5">{product.category?.name || "Uncategorized"}</p>
-        <h3 className="text-sm font-semibold text-[var(--text-main)] truncate mb-1.5">{product.name}</h3>
+      <div className="p-2 md:p-3 flex flex-col flex-1">
+        <p className="text-[9px] md:text-xs text-[var(--text-muted)] mb-0.5">{product.category?.name || "Uncategorized"}</p>
+        <h3 className="text-xs md:text-sm font-semibold text-[var(--text-main)] truncate mb-1 md:mb-1.5">{product.name}</h3>
 
         {/* Price */}
-        <div className="flex items-baseline gap-1.5 mb-2.5">
-          <span className="text-base font-bold text-[var(--accent)]">₹{finalPrice}</span>
+        <div className="flex items-baseline gap-1 md:gap-1.5 mb-2 md:mb-2.5">
+          <span className="text-sm md:text-base font-bold text-[var(--accent)]">₹{finalPrice}</span>
           {discount > 0 && (
-            <span className="text-xs text-slate-400 line-through">₹{originalPrice}</span>
+            <span className="text-[10px] md:text-xs text-slate-400 line-through">₹{originalPrice}</span>
           )}
         </div>
 
-        {/* Colors & Sizes row */}
-        <div className="flex items-center gap-3 mb-3">
+        {/* Colors & Sizes row - Mobile optimized */}
+        <div className="flex items-center gap-2 md:gap-3 mb-3 mt-auto">
           {colors.length > 0 && (
-            <div className="flex items-center gap-1">
-              {colors.slice(0, 4).map((color, i) => (
-                <span key={i} className="w-3.5 h-3.5 rounded-full border border-slate-200" style={{ backgroundColor: color }} title={color} />
+            <div className="flex items-center gap-0.5 md:gap-1">
+              {colors.slice(0, 3).map((color, i) => (
+                <span key={i} className="w-2.5 h-2.5 md:w-3.5 md:h-3.5 rounded-full border border-slate-200" style={{ backgroundColor: color }} title={color} />
               ))}
-              {colors.length > 4 && <span className="text-[10px] text-slate-400">+{colors.length - 4}</span>}
             </div>
           )}
           {sizes.length > 0 && (
-            <div className="flex gap-1">
-              {sizes.slice(0, 3).map((size, i) => (
-                <span key={i} className="px-1.5 py-0.5 text-[10px] font-medium bg-slate-100 text-slate-500 rounded">{size}</span>
+            <div className="flex gap-0.5 md:gap-1">
+              {sizes.slice(0, 2).map((size, i) => (
+                <span key={i} className="px-1 py-0.5 text-[8px] md:text-[10px] font-medium bg-slate-100 text-slate-500 rounded">{size}</span>
               ))}
-              {sizes.length > 3 && <span className="text-[10px] text-slate-400">+{sizes.length - 3}</span>}
             </div>
           )}
         </div>
 
         {/* Admin Actions */}
         {isAdmin && (
-          <div className="flex gap-1.5 pt-2 border-t border-[var(--border-light)]">
-            <button onClick={() => onEdit(product)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-medium text-[var(--primary)] bg-[var(--primary-light)] hover:bg-[var(--primary)] hover:text-white transition-all">
-              <Pencil size={12} /> Edit
+          <div className="flex gap-1 pt-2 border-t border-[var(--border-light)]">
+            <button onClick={() => onEdit(product)} className="flex-1 flex items-center justify-center gap-1 md:gap-1.5 py-1 md:py-1.5 rounded-lg text-[10px] md:text-xs font-medium text-[var(--primary)] bg-[var(--primary-light)] hover:bg-[var(--primary)] hover:text-white transition-all">
+              <Pencil size={10} className="md:w-3 md:h-3" /> Edit
             </button>
-            <button onClick={() => onDelete(product._id)} className="p-1.5 rounded-lg text-red-400 bg-red-50 hover:bg-red-500 hover:text-white transition-all">
-              <Trash2 size={13} />
+            <button onClick={() => onDelete(product._id)} className="p-1 md:p-1.5 rounded-lg text-red-400 bg-red-50 hover:bg-red-500 hover:text-white transition-all">
+              <Trash2 size={12} className="md:w-[13px] md:h-[13px]" />
             </button>
           </div>
         )}

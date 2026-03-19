@@ -143,13 +143,19 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               isOpen ? 'p-3' : 'p-2 flex items-center justify-center'
             }`}>
               <div className={`flex items-center ${isOpen ? 'gap-3' : 'justify-center'}`}>
-                {/* Avatar */}
+                {/* Avatar: show photo if available */}
                 <div className="relative flex-shrink-0">
-                  <div 
-                    className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-semibold text-sm shadow-sm"
-                    style={{ background: 'var(--gradient-primary)' }}
-                  >
-                    {user?.name?.[0]?.toUpperCase() || <UserIcon size={18} />}
+                  <div className="w-9 h-9 rounded-lg overflow-hidden shadow-sm">
+                    {user?.image ? (
+                      <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div
+                        className="w-9 h-9 flex items-center justify-center text-white font-semibold text-sm"
+                        style={{ background: 'var(--gradient-primary)' }}
+                      >
+                        {user?.name?.[0]?.toUpperCase() || <UserIcon size={18} />}
+                      </div>
+                    )}
                   </div>
                   <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" />
                 </div>

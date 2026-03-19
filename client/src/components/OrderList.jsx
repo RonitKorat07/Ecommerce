@@ -42,16 +42,10 @@ const OrderList = ({ orders, role }) => {
               </div>
 
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-sm shadow-emerald-100/30">
-                  <CheckCircle2 size={10} className="animate-pulse" />
-                  <span className="text-[9px] font-bold uppercase tracking-tight">Confirmed</span>
+                <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-sm shadow-emerald-100/30">
+                  <CheckCircle2 size={11} className="animate-pulse" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Confirmed</span>
                 </div>
-                <button
-                  onClick={() => setSelectedOrder(order)}
-                  className="w-7 h-7 rounded-md bg-white text-slate-400 hover:bg-[var(--primary)] hover:text-white hover:shadow-sm transition-all flex items-center justify-center border border-slate-100"
-                >
-                  <Eye size={14} />
-                </button>
               </div>
             </div>
 
@@ -120,9 +114,9 @@ const OrderList = ({ orders, role }) => {
                 </div>
                 <button 
                   onClick={() => setSelectedOrder(order)}
-                  className="flex items-center gap-1 px-3 py-2 rounded-lg bg-white border border-slate-100 text-[var(--primary)] font-bold text-[10px] uppercase tracking-wider hover:bg-[var(--primary)] hover:text-white hover:shadow-md transition-all"
+                  className="w-10 h-10 rounded-full bg-white border border-slate-100 text-[var(--primary)] flex items-center justify-center hover:bg-[var(--primary)] hover:text-white hover:shadow-xl transition-all duration-300 group/btn"
                 >
-                  Details <ChevronRight size={12} />
+                  <ChevronRight size={18} className="group-hover/btn:translate-x-0.5 transition-transform" />
                 </button>
               </div>
             </div>

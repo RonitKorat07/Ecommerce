@@ -30,34 +30,34 @@ const UserDashboard = () => {
 
   const scrollContainer = (ref, direction = 1) => {
     if (ref.current) {
+      const amount = window.innerWidth < 640 ? 220 : 400;
       ref.current.scrollBy({
-        left: direction * 500,
+        left: direction * amount,
         behavior: "smooth",
       });
     }
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg-body)] pb-20 space-y-12 animate-in fade-in duration-700">
+    <div className="min-h-screen bg-[var(--bg-body)] pb-16 space-y-6 sm:space-y-10 animate-in fade-in duration-700">
       {/* Categories Bar */}
       <section className="pt-6 pb-2 w-full">
         <div className="max-w-[1400px] mx-auto">
-          {/* Add px-4 lg:px-8 here but keep the scroll track bleeding to edges if we want, or just pad it here */}
-          <div className="flex gap-8 md:gap-12 overflow-x-auto py-6 hide-scrollbar scroll-smooth justify-start lg:justify-center items-center px-4 lg:px-8 w-full">
+          <div className="flex gap-5 sm:gap-8 md:gap-12 overflow-x-auto py-4 sm:py-6 hide-scrollbar scroll-smooth justify-start lg:justify-center items-center px-4 lg:px-8 w-full">
             {categories.map((cat) => (
               <div
                 key={cat._id}
                 onClick={() => navigate(`/user/category/${cat._id}`)}
-                className="flex flex-col items-center gap-3 min-w-[70px] cursor-pointer transition-all group flex-shrink-0"
+                className="flex flex-col items-center gap-2 min-w-[56px] sm:min-w-[70px] cursor-pointer transition-all group flex-shrink-0"
               >
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[var(--primary)] shadow-[0_4px_15px_rgb(0,0,0,0.05)] group-hover:shadow-[0_8px_25px_rgb(0,0,0,0.1)] bg-white transition-all duration-300 transform group-hover:-translate-y-1">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[var(--primary)] shadow-sm group-hover:shadow-md bg-white transition-all duration-300 transform group-hover:-translate-y-1">
                   <img
                     src={cat.image}
                     alt={cat.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
-                <span className="text-[13px] font-bold text-slate-600 group-hover:text-[var(--primary)] transition-colors text-center tracking-wide">
+                <span className="text-[10px] sm:text-[11px] font-semibold text-slate-600 group-hover:text-[var(--primary)] transition-colors text-center">
                   {cat.name}
                 </span>
               </div>
@@ -66,7 +66,7 @@ const UserDashboard = () => {
         </div>
       </section>
 
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 space-y-16">
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-4 md:px-6 lg:px-8 space-y-10 sm:space-y-14">
         {/* Refined Hero Banner */}
         <section className="relative group overflow-hidden rounded-[2rem] h-[220px] md:h-[300px] lg:h-[340px] shadow-2xl transition-all hover:shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
           <div
@@ -137,7 +137,7 @@ const UserDashboard = () => {
           </div>
 
           <div
-            className="flex gap-6 overflow-x-auto hide-scrollbar py-4 px-2 -mx-2 scroll-smooth"
+            className="flex gap-3 sm:gap-4 overflow-x-auto hide-scrollbar py-3 px-1 -mx-1 scroll-smooth"
             ref={topProductsRef}
           >
             {topProducts.map((product) => (
@@ -157,7 +157,7 @@ const UserDashboard = () => {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
             {products
               .filter((pro) => pro.discount >= 10 && pro.discount <= 25)
               .slice(0, 10)
@@ -199,7 +199,7 @@ const UserDashboard = () => {
           </div>
 
           <div
-            className="flex gap-6 overflow-x-auto hide-scrollbar py-4 px-2 -mx-2 scroll-smooth"
+            className="flex gap-3 sm:gap-4 overflow-x-auto hide-scrollbar py-3 px-1 -mx-1 scroll-smooth"
             ref={newArrivalsRef}
           >
             {newArrivals.map((product) => (
